@@ -1,0 +1,10 @@
+body {
+  overflow: hidden;
+}
+
+.svg {
+  opacity: 1;
+  position: relative;
+  margin-left: 50em;
+  /* visibility: hidden; */
+}
