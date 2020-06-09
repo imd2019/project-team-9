@@ -1,5 +1,5 @@
-export default class BasicObject {
-  constructor(x, y, width, height, radius, rectColor, title, sizeText, image) {
+export default class BasicObjectText {
+  constructor(x, y, width, height, radius, rectColor, title, sizeText) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -14,7 +14,6 @@ export default class BasicObject {
   display() {
     fill(this.rectColor);
     rect(this.x, this.y, this.width, this.height, this.radius);
-    image(this.image, this.x, this.y);
     textSize(this.sizeText);
     textAlign(CENTER, CENTER);
     text(this.title, this.x + this.width / 2, this.y + this.height / 2);
