@@ -101,7 +101,8 @@ function draw() {
   hitBoxHome.display();
   hitBoxCompany.display();
   testDragger.display();
-  testDragger.mouseClicked();
+  // testDragger.mouseClicked();
+  testDragger.mouseDragged();
 
   // mobilityOption.display();
 }
@@ -133,3 +134,10 @@ function hideSVG() {
   else document.getElementById("bus").style.display = "none";
 }
 window.hideSVG = hideSVG;
+
+// ==== FUNCTION MOUSEPRESSED ====
+
+function mousePressed() {
+  testDragger.mousePressed();
+}
+window.mousePressed = mousePressed;
