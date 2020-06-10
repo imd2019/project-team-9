@@ -16,6 +16,7 @@ export default class BasicObjectText {
     rect(this.x, this.y, this.width, this.height, this.radius);
     textSize(this.sizeText);
     textAlign(CENTER, CENTER);
+    fill("black");
     text(this.title, this.x + this.width / 2, this.y + this.height / 2);
   }
 
