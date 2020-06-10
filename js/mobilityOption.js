@@ -31,13 +31,13 @@ export default class MobilityOption extends BasicObjectImage {
   }
   clicked() {
     this.hidden = true;
-    // document.getElementsById("bus").style.visibility = "hidden";
+    document.getElementsById("bus").style.visibility = "hidden";
 
-    if (this.style === "none") {
-      document.getElementById("bus").style.display = "block";
-    } else {
-      document.getElementById("bus").style.display = "none";
-    }
+    // if (this.style === "none") {
+    //   document.getElementById("bus").style.display = "block";
+    // } else {
+    //   document.getElementById("bus").style.display = "none";
+    // }
     // this.svgObject.style.visibility = "hidden";
   }
 

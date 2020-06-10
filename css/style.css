@@ -4,7 +4,18 @@ body {
 
 .svg {
   opacity: 1;
-  position: relative;
-  margin-left: 50em;
+  /* display: none; */
+  /* position: relative; */
+  /* margin-left: 51em; */
+  transform: translate(42.5vw, 33vh);
+  /* visibility: hidden; */
+}
+
+.svg:hover {
+  opacity: 0.5;
+  /* display: block; */
+}
+#bus {
+  position: absolute;
   /* visibility: hidden; */
 }
