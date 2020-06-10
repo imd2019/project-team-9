@@ -21,7 +21,16 @@ function mouseClicked() {
   if (mobilityOption.hidden === true) {
     mobilityOption.hidden = false;
   }
+  hideSVG();
 }
 
 window.mouseClicked = mouseClicked;
 window.draw = draw;
+
+function hideSVG() {
+  var style = document.getElementById("bus").style.display;
+  if (style === "none") document.getElementById("bus").style.display = "block";
+  else document.getElementById("bus").style.display = "none";
+}
+
+window.hideSVG = hideSVG;

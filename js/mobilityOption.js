@@ -11,8 +11,10 @@ export default class MobilityOption extends BasicObjectImage {
     this.hidden = true;
     this.selected = false;
     this.mobilityOption = [];
-    // this.svgObject = document.getElementById("bus").style.display;
-    this.style = document.getElementById("bus").style.display;
+    // this.svgObject = document.getElementById("e3idstvo5z3s1").style.display;
+    // this.style = document.getElementById("e3idstvo5z3s1").style.display;
+    // this.bus = document.querySelector("bus");
+    // this.classes = div.classList;
   }
 
   display() {
@@ -20,7 +22,7 @@ export default class MobilityOption extends BasicObjectImage {
       push();
       rectMode(CENTER);
       noStroke();
-      fill(25);
+      fill(105);
       for (let i = 0; i < 3; i++) {
         rect(this.x - 350 + 350 * i, this.y, this.width, this.height, 10);
       }
@@ -29,10 +31,16 @@ export default class MobilityOption extends BasicObjectImage {
       //   this.hidden = true;
     }
   }
+
   clicked() {
     this.hidden = true;
-    document.getElementsById("bus").style.visibility = "hidden";
-
+    // bus.classList.add("svgdisabled");
+    // classes.add(style.opacity ="0.5");
+    // document
+    //   .getElementById("e3idstvo5z3s1")
+    //   .addEventListener("mouseclicked", mouseClicked);
+    // document.getElementsById("bus").style.visibility = "hidden";
+    // document.getElementsById("e3idstvo5z3s1").style.display = "none";
     // if (this.style === "none") {
     //   document.getElementById("bus").style.display = "block";
     // } else {
@@ -40,8 +48,4 @@ export default class MobilityOption extends BasicObjectImage {
     // }
     // this.svgObject.style.visibility = "hidden";
   }
-
-  //   hover() {
-
-  //   }
 }

@@ -15,7 +15,13 @@ body {
   opacity: 0.5;
   /* display: block; */
 }
+
+/* .svgdisabled {
+  display: none;
+} */
+
 #bus {
   position: absolute;
+  display: none;
   /* visibility: hidden; */
 }
