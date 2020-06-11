@@ -104,7 +104,7 @@ function draw() {
   // testDragger.mouseClicked();
   testDragger.mouseDragged();
 
-  // mobilityOption.display();
+  //mobilityOption.display();
 }
 
 // ==== MOUSE CLICKED ====
@@ -129,10 +129,23 @@ window.draw = draw;
 
 // ==== FUNCTION HIDE ====
 function hideSVG() {
-  var style = document.getElementById("bus").style.display;
-  if (style === "none") document.getElementById("bus").style.display = "block";
-  else document.getElementById("bus").style.display = "none";
+  // var style = document.getElementsById("bus").style.display;
+  // var style2 = document.getElementById("car").style.display;
+  // if (style === "none") document.getElementById("bus").style.display = "block";
+  // else document.getElementById("bus").style.display = "none";
+  // if (style2 === "none") document.getElementById("car").style.display = "block";
+  // else document.getElementById("car").style.display = "none";
+
+  //ACCESSING ALL ELEMENTS OF SAME CLASS IN HTML
+  var elements = document.getElementsByClassName("svg");
+  for (var i = 0; i < elements.length; i++) {
+    if (elements[i].style.display === "none") {
+      elements[i].style.display = "block";
+    } else elements[i].style.display = "none";
+  }
+  // console.log(elements);
 }
+
 window.hideSVG = hideSVG;
 
 // ==== FUNCTION MOUSEPRESSED ====
