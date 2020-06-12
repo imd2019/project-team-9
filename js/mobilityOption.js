@@ -22,7 +22,7 @@ export default class MobilityOption extends BasicObjectImage {
       push();
       rectMode(CENTER);
       noStroke();
-      fill(105);
+      fill(166, 206, 207);
       for (let i = 0; i < 3; i++) {
         rect(this.x - 350 + 350 * i, this.y, this.width, this.height, 10);
       }
