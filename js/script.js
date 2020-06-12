@@ -1,18 +1,23 @@
-// KOMMENTAR: Für größere Bildschirme alle Objekte von links oben her ausrichten oder Positionen der hitboxen relativ zur Fenstergröße definieren
-
 // ==== SETUP ====
 import BasicObjectText from "./basicObjectText.js";
 import BasicObjectImage from "./basicObjectImage.js";
 import MobilityOption from "./mobilityOption.js";
 import Draggable from "./draggable.js";
+import CollisionDetection from "./collisionDetection.js";
 
-frameRate(64);
+// variables
+let scaleX = windowWidth / 1536;
+let scaleY = windowHeight / 750;
 
 // load images
 let mapImage = loadImage("./assets/map.png");
 
 // initiate objects
 let mapClass = new BasicObjectImage(0, 0, windowWidth, windowHeight, mapImage);
+
+// hitBoxes
+let hitBoxArray = [];
+
 let hitBoxMesse = new BasicObjectText(
   435,
   95,
@@ -23,6 +28,7 @@ let hitBoxMesse = new BasicObjectText(
   "Messe",
   30
 );
+hitBoxArray.push(hitBoxMesse);
 
 let hitBoxCustomerOne = new BasicObjectText(
   198,
@@ -34,6 +40,7 @@ let hitBoxCustomerOne = new BasicObjectText(
   "Kunde 1",
   30
 );
+hitBoxArray.push(hitBoxCustomerOne);
 
 let hitBoxCustomerTwo = new BasicObjectText(
   1220,
@@ -45,6 +52,7 @@ let hitBoxCustomerTwo = new BasicObjectText(
   "Kunde 2",
   30
 );
+hitBoxArray.push(hitBoxCustomerTwo);
 
 let hitBoxCustomerThree = new BasicObjectText(
   1305,
@@ -56,6 +64,7 @@ let hitBoxCustomerThree = new BasicObjectText(
   "Kunde 3",
   30
 );
+hitBoxArray.push(hitBoxCustomerThree);
 
 let hitBoxHome = new BasicObjectText(
   960,
@@ -67,6 +76,7 @@ let hitBoxHome = new BasicObjectText(
   "Home",
   30
 );
+hitBoxArray.push(hitBoxHome);
 
 let hitBoxCompany = new BasicObjectText(
   687,
@@ -78,8 +88,20 @@ let hitBoxCompany = new BasicObjectText(
   "Company",
   30
 );
+hitBoxArray.push(hitBoxCompany);
 
+// make hitBow scaleable
+for (let arrayObject of hitBoxArray) {
+  arrayObject.x *= scaleX;
+  arrayObject.y *= scaleY;
+  arrayObject.width *= scaleX;
+  arrayObject.height *= scaleY;
+}
+
+// faces
+let facesArray = [];
 let testDragger = new Draggable(400, 200, 100, 100, mapImage);
+facesArray.push(testDragger);
 
 let mobilityOption = new MobilityOption(
   windowWidth / 2,
@@ -88,34 +110,38 @@ let mobilityOption = new MobilityOption(
   500
 );
 
+let collisionDetectionMap = new CollisionDetection();
+
 // ==== DRAW ====
 function draw() {
   mapClass.display();
 
-  // hitBoxen
-  // könnte man noch alles in ein Array packen, um den COde zu kürzen
-  hitBoxMesse.display();
-  hitBoxCustomerOne.display();
-  hitBoxCustomerTwo.display();
-  hitBoxCustomerThree.display();
-  hitBoxHome.display();
-  hitBoxCompany.display();
-  testDragger.display();
-  // testDragger.mouseClicked();
-  testDragger.mouseDragged();
+  // hitBoxes
+  for (let arrayObject of hitBoxArray) {
+    arrayObject.display();
+  }
+
+  // faces
+  for (let arrayObject of facesArray) {
+    arrayObject.display();
+    arrayObject.mouseClicked();
+    if (arrayObject.clickTest) {
+      arrayObject.clicked();
+    }
+  }
+
+  // collision detection
+  collisionDetectionMap.detection(facesArray, hitBoxArray);
 
   // mobilityOption.display();
 }
 
 // ==== MOUSE CLICKED ====
 function mouseClicked() {
-  // hitBoxen
-  hitBoxMesse.mouseClicked();
-  hitBoxCustomerOne.mouseClicked();
-  hitBoxCustomerTwo.mouseClicked();
-  hitBoxCustomerThree.mouseClicked();
-  hitBoxHome.mouseClicked();
-  hitBoxCompany.mouseClicked();
+  // hitBoxes
+  for (let arrayObject of hitBoxArray) {
+    arrayObject.mouseClicked();
+  }
 
   mobilityOption.mouseClicked();
   if (mobilityOption.hidden === true) {
@@ -134,10 +160,3 @@ function hideSVG() {
   else document.getElementById("bus").style.display = "none";
 }
 window.hideSVG = hideSVG;
-
-// ==== FUNCTION MOUSEPRESSED ====
-
-function mousePressed() {
-  testDragger.mousePressed();
-}
-window.mousePressed = mousePressed;
