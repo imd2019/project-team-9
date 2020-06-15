@@ -21,6 +21,11 @@ let sheGenderImage = loadImage("./assets/she gender.png");
 let theyGenderImage = loadImage("./assets/they gender.png");
 let heGenderImage = loadImage("./assets/he gender.png");
 
+let workerOneImage = loadImage("./assets/worker_one.png");
+let workerTwoImage = loadImage("./assets/worker_two.png");
+let workerThreeImage = loadImage("./assets/worker_three.png");
+let workerFourImage = loadImage("./assets/worker_four.png");
+
 let barBG = loadImage("./assets/bar.png");
 let exclamationMark = loadImage("./assets/exclamationMark.png");
 let close = loadImage("./assets/close.png");
@@ -28,7 +33,7 @@ let calender = loadImage("./assets/calender.png");
 let clock = loadImage("./assets/clock.png");
 let sun = loadImage("./assets/sun.png");
 
-// initiate objects
+// ==== INITIATE OBJECTS ====
 let mapClass = new BasicObjectImage(0, 0, windowWidth, windowHeight, mapImage);
 
 // hitBoxes
@@ -192,9 +197,43 @@ let textX = new BasicObjectImage(
 
 // faces
 let facesArray = [];
-let testDragger = new Draggable(windowWidth / 2, 0, 50, 50, sheImage);
-// let testDragger1 = new Draggable(windowWidth / 2, 0, 50, 50, heImage);
-facesArray.push(testDragger);
+let imageFace;
+
+for (let i = 0; i < 5; i++) {
+  if (i === 0) {
+    imageFace = workerOneImage;
+  }
+  if (i === 1) {
+    imageFace = workerTwoImage;
+  }
+  if (i === 2) {
+    imageFace = sheImage;
+  }
+  if (i === 3) {
+    imageFace = workerThreeImage;
+  }
+  if (i === 4) {
+    imageFace = workerFourImage;
+  }
+  facesArray[i] = new Draggable(
+    (windowWidth / 2 - 565) * scaleX + i * 65,
+    5,
+    50,
+    50,
+    imageFace
+  );
+}
+
+// facesArray.push(testDragger, workerOne, workerTwo, workerThree, workerFour);
+console.log(facesArray);
+
+// make faces scaleable
+for (let arrayObject of facesArray) {
+  arrayObject.x *= scaleX;
+  arrayObject.y *= scaleY;
+  arrayObject.width *= scaleX;
+  arrayObject.height *= scaleY;
+}
 
 // ==== DRAW ====
 function draw() {
@@ -230,11 +269,11 @@ function draw() {
   }
 
   // faces
-  for (let arrayObject of facesArray) {
-    arrayObject.display();
-    arrayObject.mouseClicked();
-    if (arrayObject.clickTest) {
-      arrayObject.clicked();
+  for (let i = 0; i < facesArray.length; i++) {
+    facesArray[i].display();
+    facesArray[i].mouseClicked();
+    if (facesArray[i].clickTest) {
+      facesArray[i].clicked();
     }
   }
 
