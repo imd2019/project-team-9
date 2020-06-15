@@ -4,7 +4,7 @@ import BasicObjectImage from "./basicObjectImage.js";
 import MobilityOption from "./mobilityOption.js";
 import Draggable from "./draggable.js";
 import CollisionDetection from "./collisionDetection.js";
-import User from "./User.js";
+import StatusBar from "./statusBar.js";
 
 // variables
 let scaleX = windowWidth / 1536;
@@ -12,12 +12,12 @@ let scaleY = windowHeight / 750;
 
 // load images
 let mapImage = loadImage("./assets/map.png");
-let sheImage = loadImage("./assets/she.png");
-let heImage = loadImage("./assets/he.png");
-let theyImage = loadImage("./assets/they.png");
-let sheGenderImage = loadImage("./assets/she gender.png");
-let theyGenderImage = loadImage("./assets/they gender.png");
-let heGenderImage = loadImage("./assets/he gender.png");
+let barBG = loadImage("./assets/bar.png");
+let exclamationMark = loadImage("./assets/exclamationMark.png");
+let close = loadImage("./assets/close.png");
+let calender = loadImage("./assets/calender.png");
+let clock = loadImage("./assets/clock.png");
+let sun = loadImage("./assets/sun.png");
 
 // initiate objects
 let mapClass = new BasicObjectImage(0, 0, windowWidth, windowHeight, mapImage);
@@ -52,7 +52,7 @@ hitBoxArray.push(hitBoxCustomerOne);
 let hitBoxCustomerTwo = new BasicObjectText(
   1220,
   84,
-  70,
+  120,
   110,
   10,
   "rgba(0,0,0,0)",
@@ -97,7 +97,7 @@ let hitBoxCompany = new BasicObjectText(
 );
 hitBoxArray.push(hitBoxCompany);
 
-// make hitBow scaleable
+// make hitBoxes scaleable
 for (let arrayObject of hitBoxArray) {
   arrayObject.x *= scaleX;
   arrayObject.y *= scaleY;
@@ -105,67 +105,71 @@ for (let arrayObject of hitBoxArray) {
   arrayObject.height *= scaleY;
 }
 
-let mobilityOptions = [];
-for (let i = 0; i < 3; i++) {
-  let mobilityOption = new MobilityOption(
-    windowWidth / 2 - 500 + 350 * i,
-    windowHeight / 2 - 250,
-    300,
-    500
-  );
-  mobilityOptions.push(mobilityOption);
+// statusBar
+let statusBarArray = [];
+let bar = new StatusBar(
+  windowWidth / 2,
+  35,
+  750,
+  70,
+  barBG,
+  scaleX,
+  scaleY,
+  exclamationMark,
+  sun,
+  calender,
+  clock
+);
+statusBarArray.push(bar);
+
+// make status Bar scaleable
+for (let arrayObject of statusBarArray) {
+  arrayObject.y *= scaleY;
+  arrayObject.width *= scaleX;
+  arrayObject.height *= scaleY;
 }
 
-let collisionDetectionMap = new CollisionDetection();
+// to Do list
+let testToDo = new BasicObjectText(
+  windowWidth / 2 - 250,
+  windowHeight / 2 - 250,
+  500,
+  500,
+  10,
+  "pink",
+  "To Do List",
+  30
+);
 
-// user gender
-
-let showGame = false;
-let userImage = [];
-userImage.push(sheGenderImage);
-userImage.push(theyGenderImage);
-userImage.push(heGenderImage);
-let users = [];
-for (let i = 0; i < 3; i++) {
-  let user = new User(
-    windowWidth / 2 - 525 + 400 * i,
-    windowHeight / 2 - 300,
-    300,
-    650,
-    userImage[i]
-  );
-  users.push(user);
-}
+let textX = new BasicObjectImage(
+  windowWidth / 2 - 230,
+  windowHeight / 2 - 230,
+  50,
+  50,
+  close
+);
 
 // faces
 let facesArray = [];
-
-let testDragger = new Draggable(windowWidth / 2, 0, 50, 50, sheImage);
-// let testDragger1 = new Draggable(windowWidth / 2, 0, 50, 50, heImage);
-
+let testDragger = new Draggable(400, 200, 100, 100, mapImage);
 facesArray.push(testDragger);
+
+let mobilityOption = new MobilityOption(
+  windowWidth / 2,
+  windowHeight / 2,
+  300,
+  500
+);
+
+let collisionDetectionMap = new CollisionDetection();
 
 // ==== DRAW ====
 function draw() {
-  //User selection display
-  fill(186, 226, 227);
-  rect(0, 0, windowWidth, windowHeight);
-  for (let i = 0; i < 3; i++) {
-    if (users[i].userSelection === true) {
-      for (let i = 0; i < 3; i++) {
-        users[i].display();
-      }
-    } //boolean to make it disappear after selecting one
-    if (users[i].userSelection === false) {
-      for (let i = 0; i < 3; i++) {
-        users[i].userSelection = false;
-        showGame = true;
-      }
-    }
-  }
-
-  // if (showGame === true) {
   mapClass.display();
+
+  bar.display();
+
+  imageMode(CORNER);
 
   // hitBoxes
   for (let arrayObject of hitBoxArray) {
@@ -173,7 +177,6 @@ function draw() {
   }
 
   // faces
-  // if (showGame === true) {
   for (let arrayObject of facesArray) {
     arrayObject.display();
     arrayObject.mouseClicked();
@@ -182,44 +185,40 @@ function draw() {
     }
   }
 
-  // IF Bedingung für verschiedene gender
-  // if (users[2].gender === true) {
-  //   testDragger1.display();
-  // }
-  // }
-
   // collision detection
   collisionDetectionMap.detection(facesArray, hitBoxArray);
 
-  //Anzeigen von Auswahlbuttons und SVG Hover
-  // if (collisionDetectionMap.overlapping === true) {
-  //   hideSVG();
-  //   for (let i = 0; i < 3; i++) {
-  //     mobilityOptions[i].hidden = false;
-  //   }
-  // }
-  // for (let i = 0; i < 3; i++) {
-  //   mobilityOptions[i].display();
-  // }
-}
+  // mobilityOption.display();
 
-// console.log(mobilityOption.hidden);
-//console.log(collisionDetectionMap.overlapping);
-//}
+  // show to Do
+  if (bar.showToDo) {
+    testToDo.display();
+    textX.display();
+  }
+}
 
 // ==== MOUSE CLICKED ====
 function mouseClicked() {
+  // status Bar
+  bar.mouseClicked();
+  textX.mouseClicked();
+
+  // close To Do
+  if (textX.wasClicked) {
+    bar.showToDo = false;
+    textX.wasClicked = false;
+  }
+
   // hitBoxes
   for (let arrayObject of hitBoxArray) {
     arrayObject.mouseClicked();
   }
 
-  // mobilityOption.mouseClicked();
-  if (showGame === false) {
-    for (let i = 0; i < 3; i++) {
-      users[i].mouseClicked();
-    }
+  mobilityOption.mouseClicked();
+  if (mobilityOption.hidden === true) {
+    mobilityOption.hidden = false;
   }
+  hideSVG();
 }
 
 window.mouseClicked = mouseClicked;
@@ -227,15 +226,8 @@ window.draw = draw;
 
 // ==== FUNCTION HIDE ====
 function hideSVG() {
-  //ACCESSING ALL ELEMENTS OF SAME CLASS IN HTML
-  var elements = document.getElementsByClassName("svg");
-  for (var i = 0; i < elements.length; i++) {
-    // if (elements[i].style.display === "none") {
-    elements[i].style.display = "block";
-    // }
-    // else elements[i].style.display = "none";
-  }
-  // console.log(elements);
+  var style = document.getElementById("bus").style.display;
+  if (style === "none") document.getElementById("bus").style.display = "block";
+  else document.getElementById("bus").style.display = "none";
 }
-
 window.hideSVG = hideSVG;

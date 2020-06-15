@@ -12,6 +12,7 @@ export default class BasicObjectText {
   }
 
   display() {
+    noStroke();
     fill(this.rectColor);
     rect(this.x, this.y, this.width, this.height, this.radius);
     textSize(this.sizeText);

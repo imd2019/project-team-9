@@ -5,6 +5,7 @@ export default class BasicObjectImage {
     this.width = width;
     this.height = height;
     this.image = image;
+    this.wasClicked = false;
   }
 
   display() {
@@ -24,7 +25,7 @@ export default class BasicObjectImage {
   }
 
   clicked() {
-    console.log("Test");
+    this.wasClicked = true;
   }
 
   mouseClicked() {
