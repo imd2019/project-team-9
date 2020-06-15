@@ -1,11 +1,15 @@
 export default class CollisionDetection {
-  constructor() {}
+  constructor() {
+    this.overlapping = false;
+  }
 
   detection(arrayOne, arrayTwo) {
     for (let objectOne of arrayOne) {
       for (let objectTwo of arrayTwo) {
         if (this.isOverlapping(objectOne, objectTwo)) {
-          console.log("Die Rechtecke überlappen");
+          // console.log("Die Rechtecke überlappen");
+          //console.log(this.overlapping);
+          this.overlapping = true;
         }
       }
     }
