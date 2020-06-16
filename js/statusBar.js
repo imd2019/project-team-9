@@ -37,7 +37,7 @@ export default class StatusBar {
     this.calenderImage = calenderImage;
     this.xC = this.x + 140 * this.scaleX;
     this.widthC = 53.6 * scaleX;
-    this.heightC = 44.4 * scaleY;
+    this.heightC = 44 * scaleY;
 
     this.clockImage = clockImage;
     this.xClock = this.x + 220 * this.scaleX;

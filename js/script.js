@@ -6,10 +6,19 @@ import Draggable from "./draggable.js";
 import CollisionDetection from "./collisionDetection.js";
 import User from "./User.js";
 import StatusBar from "./statusBar.js";
+import ToDo from "./toDo.js";
 
 // variables
 let scaleX = windowWidth / 1536;
 let scaleY = windowHeight / 750;
+
+let timerAll = 0;
+let hourTimer = 6;
+let minuteTimer = 0;
+let timerDay = 1;
+let time = 0;
+
+let rokkittFont = loadFont("./assets/Rokkitt-Bold.ttf");
 
 // load images
 let mapImage = loadImage("./assets/map.png");
@@ -28,10 +37,12 @@ let workerFourImage = loadImage("./assets/worker_four.png");
 
 let barBG = loadImage("./assets/bar.png");
 let exclamationMark = loadImage("./assets/exclamationMark.png");
-let close = loadImage("./assets/close.png");
 let calender = loadImage("./assets/calender.png");
 let clock = loadImage("./assets/clock.png");
 let sun = loadImage("./assets/sun.png");
+
+let toDoBG = loadImage("./assets/toDo_BG.png");
+let close = loadImage("./assets/close.png");
 
 // ==== INITIATE OBJECTS ====
 let mapClass = new BasicObjectImage(0, 0, windowWidth, windowHeight, mapImage);
@@ -176,22 +187,14 @@ for (let arrayObject of statusBarArray) {
 }
 
 // to Do list
-let testToDo = new BasicObjectText(
-  windowWidth / 2 - 250,
-  windowHeight / 2 - 250,
-  500,
-  500,
-  10,
-  "pink",
-  "To Do List",
-  30
-);
-
-let textX = new BasicObjectImage(
-  windowWidth / 2 - 230,
-  windowHeight / 2 - 230,
-  50,
-  50,
+let toDoList = new ToDo(
+  windowWidth / 2,
+  windowHeight / 2,
+  745 * scaleX,
+  393 * scaleY,
+  scaleX,
+  scaleY,
+  toDoBG,
   close
 );
 
@@ -215,17 +218,8 @@ for (let i = 0; i < 5; i++) {
   if (i === 4) {
     imageFace = workerFourImage;
   }
-  facesArray[i] = new Draggable(
-    (windowWidth / 2 - 565) * scaleX + i * 65,
-    5,
-    50,
-    50,
-    imageFace
-  );
+  facesArray[i] = new Draggable(490 + i * 65, 5, 50, 50, imageFace);
 }
-
-// facesArray.push(testDragger, workerOne, workerTwo, workerThree, workerFour);
-console.log(facesArray);
 
 // make faces scaleable
 for (let arrayObject of facesArray) {
@@ -233,6 +227,69 @@ for (let arrayObject of facesArray) {
   arrayObject.y *= scaleY;
   arrayObject.width *= scaleX;
   arrayObject.height *= scaleY;
+}
+
+// initiate time
+let timer = new BasicObjectText(
+  bar.x + 222 * scaleX,
+  bar.y - 17 * scaleY,
+  105 * scaleX,
+  30 * scaleY,
+  10,
+  "rgba(0,0,0, 0)",
+  time,
+  27 * scaleX
+);
+timer.setTextColor("white");
+timer.setFont(rokkittFont);
+
+let day = new BasicObjectText(
+  bar.x + 140 * scaleX,
+  bar.y - 17 * scaleY,
+  54 * scaleX,
+  30 * scaleY,
+  10,
+  "rgba(0,0,0, 0)",
+  timerDay,
+  27 * scaleX
+);
+day.setTextColor("white");
+day.setFont(rokkittFont);
+
+// set Time
+function setTime() {
+  timerAll++;
+
+  if (timerAll === 30) {
+    minuteTimer++;
+    timerAll = 0;
+  }
+
+  if (minuteTimer === 59) {
+    minuteTimer = 0;
+    hourTimer++;
+  }
+
+  if (hourTimer === 20) {
+    minuteTimer = 0;
+    hourTimer = 6;
+    timerDay++;
+  }
+
+  // set 0 before numbers less than 10
+  if (hourTimer < 10) {
+    time = "0" + hourTimer;
+  } else {
+    time = hourTimer;
+  }
+
+  if (minuteTimer < 10) {
+    time += ":" + "0" + minuteTimer;
+  } else {
+    time += ":" + minuteTimer;
+  }
+
+  return time;
 }
 
 // ==== DRAW ====
@@ -257,9 +314,13 @@ function draw() {
   // if (showGame === true) {
   mapClass.display();
 
-  mapClass.display();
-
   bar.display();
+
+  // timer
+  timer.display();
+  day.display();
+  timer.setText(setTime());
+  day.setText(timerDay);
 
   imageMode(CORNER);
 
@@ -282,8 +343,7 @@ function draw() {
 
   // show to Do
   if (bar.showToDo) {
-    testToDo.display();
-    textX.display();
+    toDoList.display();
   }
 
   // IF Bedingung für verschiedene gender
@@ -312,12 +372,12 @@ function draw() {
 function mouseClicked() {
   // status Bar
   bar.mouseClicked();
-  textX.mouseClicked();
+  toDoList.mouseClicked();
 
   // close To Do
-  if (textX.wasClicked) {
+  if (toDoList.wasClicked) {
     bar.showToDo = false;
-    textX.wasClicked = false;
+    toDoList.wasClicked = false;
   }
 
   // hitBoxes

@@ -6,9 +6,11 @@ export default class BasicObjectText {
     this.height = height;
     this.radius = radius;
     this.rectColor = rectColor;
+    this.textColor = "black";
     this.title = title;
     this.sizeText = sizeText;
     this.image = image;
+    this.textFont = textFont;
   }
 
   display() {
@@ -17,7 +19,8 @@ export default class BasicObjectText {
     rect(this.x, this.y, this.width, this.height, this.radius);
     textSize(this.sizeText);
     textAlign(CENTER, CENTER);
-    fill("black");
+    textFont(this.textFont);
+    fill(this.textColor);
     text(this.title, this.x + this.width / 2, this.y + this.height / 2);
   }
 
@@ -41,5 +44,17 @@ export default class BasicObjectText {
     if (this.hitTest(mouseX, mouseY)) {
       this.clicked();
     }
+  }
+
+  setTextColor(color) {
+    this.textColor = color;
+  }
+
+  setFont(font) {
+    this.textFont = font;
+  }
+
+  setText(text) {
+    this.title = text;
   }
 }
