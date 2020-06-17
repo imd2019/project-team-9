@@ -43,6 +43,7 @@ export default class BasicObjectText {
   mouseClicked() {
     if (this.hitTest(mouseX, mouseY)) {
       this.clicked();
+      return true;
     }
   }
 
