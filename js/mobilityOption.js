@@ -1,8 +1,8 @@
-import BasicObjectImage from "./basicObjectImage.js";
+import BasicObjectText from "./basicObjectText.js";
 
-export default class MobilityOption extends BasicObjectImage {
-  constructor(x, y, width, height, image) {
-    super(x, y, width, height, image);
+export default class MobilityOption extends BasicObjectText {
+  constructor(x, y, width, height, titleMobi) {
+    super(x, y, width, height);
     // this.cost = cost;
     // this.trackLength = trackLength;
     // this.duration = duration;
@@ -10,14 +10,13 @@ export default class MobilityOption extends BasicObjectImage {
     // this.productivityInfluence = productivityInfluence;
     this.hidden = true;
     this.selected = false;
-    this.mobilityOption = [];
-    // this.svgObject = document.getElementById("e3idstvo5z3s1").style.display;
-    // this.style = document.getElementById("e3idstvo5z3s1").style.display;
-    // this.bus = document.querySelector("bus");
-    // this.classes = div.classList;
+    this.titleMobi = titleMobi;
   }
 
   display() {
+    if (this.selected === true) {
+      this.hidden = true;
+    }
     if (this.hidden === false) {
       push();
 
@@ -27,10 +26,11 @@ export default class MobilityOption extends BasicObjectImage {
       rect(this.x, this.y, this.width, this.height, 10);
 
       pop();
+      text(this.titleMobi, this.x + this.width / 2, this.y + this.height / 2);
     }
   }
 
-  // clicked() {
-  //   this.hidden = true;
-  // }
+  clicked() {
+    this.selected = true;
+  }
 }

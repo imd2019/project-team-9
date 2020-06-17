@@ -11,6 +11,7 @@ export default class BasicObjectText {
     this.sizeText = sizeText;
     this.image = image;
     this.textFont = textFont;
+    this.location = false;
   }
 
   display() {
@@ -37,6 +38,7 @@ export default class BasicObjectText {
   }
 
   clicked() {
+    this.location = true;
     console.log("Test");
   }
 

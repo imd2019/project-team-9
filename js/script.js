@@ -49,6 +49,8 @@ let mapClass = new BasicObjectImage(0, 0, windowWidth, windowHeight, mapImage);
 
 // hitBoxes
 let hitBoxArray = [];
+// let messe = false;
+// let customer1 = false;
 
 let hitBoxMesse = new BasicObjectText(
   435,
@@ -122,19 +124,23 @@ let hitBoxCompany = new BasicObjectText(
 );
 hitBoxArray.push(hitBoxCompany);
 
+let collisionDetectionMap = new CollisionDetection();
+
 // mobility options
 let mobilityOptions = [];
+
+let titleMobi;
+
 for (let i = 0; i < 3; i++) {
-  let mobilityOption = new MobilityOption(
+  let mobilityOptionButton = new MobilityOption(
     windowWidth / 2 - 500 + 350 * i,
     windowHeight / 2 - 250,
     300,
-    500
+    500,
+    titleMobi
   );
-  mobilityOptions.push(mobilityOption);
+  mobilityOptions.push(mobilityOptionButton);
 }
-
-let collisionDetectionMap = new CollisionDetection();
 
 // user gender
 let showGame = false;
@@ -311,61 +317,78 @@ function draw() {
     }
   }
 
-  // if (showGame === true) {
-  mapClass.display();
+  if (showGame === true) {
+    mapClass.display();
 
-  bar.display();
+    bar.display();
 
-  // timer
-  timer.display();
-  day.display();
-  timer.setText(setTime());
-  day.setText(timerDay);
+    // timer
+    timer.display();
+    day.display();
+    timer.setText(setTime());
+    day.setText(timerDay);
 
-  imageMode(CORNER);
+    imageMode(CORNER);
 
-  // hitBoxes
-  for (let arrayObject of hitBoxArray) {
-    arrayObject.display();
-  }
-
-  // faces
-  for (let i = 0; i < facesArray.length; i++) {
-    facesArray[i].display();
-    facesArray[i].mouseClicked();
-    if (facesArray[i].clickTest) {
-      facesArray[i].clicked();
+    // hitBoxes
+    for (let arrayObject of hitBoxArray) {
+      arrayObject.display();
     }
+
+    // faces
+    for (let i = 0; i < facesArray.length; i++) {
+      facesArray[i].display();
+      facesArray[i].mouseClicked();
+      if (facesArray[i].clickTest) {
+        facesArray[i].clicked();
+      }
+    }
+
+    // collision detection
+    collisionDetectionMap.detection(facesArray, hitBoxArray);
+    if (collisionDetectionMap.overlapping === true) {
+    }
+
+    if (bar.showToDo) {
+      // show to Do
+      toDoList.display();
+    }
+
+    // IF Bedingung für verschiedene gender
+    // if (users[2].gender === true) {
+    //   testDragger1.display();
+    // }
+
+    if (hitBoxArray[0].location === true) {
+      titleMobi = ["Car", "Train", "Plane"];
+    }
+
+    //Anzeigen von Auswahlbuttons und SVG Hover
+    if (collisionDetectionMap.overlapping === true) {
+      for (let i = 0; i < 3; i++) {
+        mobilityOptions[i].hidden = false;
+      }
+      showSVG();
+    }
+    for (let i = 0; i < 3; i++) {
+      if (mobilityOptions[i].selected === true) {
+        for (let i = 0; i < 3; i++) {
+          mobilityOptions[i].hidden = true;
+        }
+
+        hideSVG();
+        // mobilityOptions[i].selected = false;
+      }
+    }
+    for (let i = 0; i < 3; i++) {
+      mobilityOptions[i].display();
+    }
+
+    console.log(hitBoxArray[0].location);
+    console.log(titleMobi);
+
+    //console.log(collisionDetectionMap.overlapping);
   }
-
-  // collision detection
-  collisionDetectionMap.detection(facesArray, hitBoxArray);
-
-  // show to Do
-  if (bar.showToDo) {
-    toDoList.display();
-  }
-
-  // IF Bedingung für verschiedene gender
-  // if (users[2].gender === true) {
-  //   testDragger1.display();
-  // }
-  // }
-
-  //Anzeigen von Auswahlbuttons und SVG Hover
-  // if (collisionDetectionMap.overlapping === true) {
-  //   hideSVG();
-  //   for (let i = 0; i < 3; i++) {
-  //     mobilityOptions[i].hidden = false;
-  //   }
-  // }
-  // for (let i = 0; i < 3; i++) {
-  //   mobilityOptions[i].display();
-  // }
-
-  // console.log(mobilityOption.hidden);
-  //console.log(collisionDetectionMap.overlapping);
-  //}
 }
 
 // ==== MOUSE CLICKED ====
@@ -384,26 +407,43 @@ function mouseClicked() {
   for (let arrayObject of hitBoxArray) {
     arrayObject.mouseClicked();
   }
-
-  // mobilityOption.mouseClicked();
+  for (let i = 0; i < 3; i++) {
+    if (mobilityOptions[i].hidden === false) {
+      mobilityOptions[i].mouseClicked();
+    }
+  }
   if (showGame === false) {
     for (let i = 0; i < 3; i++) {
       users[i].mouseClicked();
     }
   }
-  hideSVG();
 }
 
 window.mouseClicked = mouseClicked;
 window.draw = draw;
 
-// ==== FUNCTION HIDE ====
-function hideSVG() {
+// ==== FUNCTION SHOW ====
+function showSVG() {
   //ACCESSING ALL ELEMENTS OF SAME CLASS IN HTML
   var elements = document.getElementsByClassName("svg");
   for (var i = 0; i < elements.length; i++) {
     // if (elements[i].style.display === "none") {
     elements[i].style.display = "block";
+    // }
+    // else elements[i].style.display = "none";
+  }
+  // console.log(elements);
+}
+window.showSVG = showSVG;
+
+// ==== FUNCTION HIDE ====
+
+function hideSVG() {
+  //ACCESSING ALL ELEMENTS OF SAME CLASS IN HTML
+  var elements = document.getElementsByClassName("svg");
+  for (var i = 0; i < elements.length; i++) {
+    // if (elements[i].style.display === "none") {
+    elements[i].style.display = "none";
     // }
     // else elements[i].style.display = "none";
   }

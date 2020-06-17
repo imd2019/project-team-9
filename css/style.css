@@ -6,24 +6,16 @@ body {
 
 .svg {
   opacity: 1;
-  /* display: none; */
-  /* position: relative; */
-  /* margin-left: 51em; */
-  transform: translate(42.5vw, 33vh);
-  /* visibility: hidden; */
-}
-
-.svg:hover {
-  opacity: 0.5;
-  /* display: block; */
-}
-
-/* .svgdisabled {
-  display: none;
-} */
-
-#bus {
   position: absolute;
   display: none;
-  /* visibility: hidden; */
+}
+
+#bus {
+  transform: translate(26.6vw, 27vh);
+  position: absolute;
+  /* display: none; */
+}
+
+#car {
+  transform: translate(60.5vw, 27vh);
 }
