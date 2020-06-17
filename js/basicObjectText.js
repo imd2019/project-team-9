@@ -1,5 +1,15 @@
 export default class BasicObjectText {
-  constructor(x, y, width, height, radius, rectColor, title, sizeText) {
+  constructor(
+    x,
+    y,
+    width,
+    height,
+    radius,
+    rectColor,
+    title,
+    sizeText,
+    trackLength
+  ) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -12,6 +22,7 @@ export default class BasicObjectText {
     this.image = image;
     this.textFont = textFont;
     this.location = false;
+    this.trackLength = trackLength;
   }
 
   display() {

@@ -65,7 +65,8 @@ let hitBoxMesse = new BasicObjectText(
   10,
   "rgba(0,0,0,0)",
   "Messe",
-  30
+  30,
+  560
 );
 hitBoxArray.push(hitBoxMesse);
 
@@ -77,7 +78,8 @@ let hitBoxCustomerOne = new BasicObjectText(
   10,
   "rgba(0,0,0,0)",
   "Kunde 1",
-  30
+  30,
+  180
 );
 hitBoxArray.push(hitBoxCustomerOne);
 
@@ -89,7 +91,8 @@ let hitBoxCustomerTwo = new BasicObjectText(
   10,
   "rgba(0,0,0,0)",
   "Kunde 2",
-  30
+  30,
+  400
 );
 hitBoxArray.push(hitBoxCustomerTwo);
 
@@ -100,8 +103,9 @@ let hitBoxCustomerThree = new BasicObjectText(
   135,
   10,
   "rgba(0,0,0,0)",
-  "Kunde 3",
-  30
+  "Tochterfirma",
+  30,
+  90
 );
 hitBoxArray.push(hitBoxCustomerThree);
 
@@ -113,7 +117,8 @@ let hitBoxHome = new BasicObjectText(
   10,
   "rgba(0,0,0,0)",
   "Home",
-  30
+  30,
+  0
 );
 hitBoxArray.push(hitBoxHome);
 
@@ -125,7 +130,8 @@ let hitBoxCompany = new BasicObjectText(
   10,
   "rgba(0,0,0,0)",
   "Company",
-  30
+  30,
+  15
 );
 hitBoxArray.push(hitBoxCompany);
 
@@ -133,17 +139,41 @@ let collisionDetectionMap = new CollisionDetection();
 
 // mobility options
 let mobilityOptions = [];
+let mobilityOptionButton;
+let cost = [0.5, 0.24, 0.3, 0.53, 0];
+let velocity = [120, 150, 1000, 80, 0];
+let enviromentalInfluence = [147, 32, 230, 80, 0];
 
-let titleMobi;
+// mobilityOptions[0] = Auto
+// mobilityOptions[1] = Zug
+// mobilityOptions[2] = Flugzeug
+// mobilityOptions[3] = Bus
+// mobilityOptions[4] = Call
+for (let i = 0; i < 5; i++) {
+  if (i <= 1) {
+    mobilityOptionButton = new MobilityOption(
+      windowWidth / 2 - 500 + 350 * i,
+      windowHeight / 2 - 250,
+      300,
+      500,
+      cost[i],
+      velocity[i],
+      enviromentalInfluence[i]
+    );
+  }
 
-for (let i = 0; i < 3; i++) {
-  let mobilityOptionButton = new MobilityOption(
-    windowWidth / 2 - 500 + 350 * i,
-    windowHeight / 2 - 250,
-    300,
-    500,
-    titleMobi
-  );
+  if (i > 1) {
+    mobilityOptionButton = new MobilityOption(
+      windowWidth / 2 + 200,
+      windowHeight / 2 - 250,
+      300,
+      500,
+      cost[i],
+      velocity[i],
+      enviromentalInfluence[i]
+    );
+  }
+
   mobilityOptions.push(mobilityOptionButton);
 }
 
@@ -348,16 +378,18 @@ function draw() {
     }
   }
 
-
   if (showGame === true) {
     mapClass.display();
-=======
-  // if (showGame && showIntermediateResult) {
-  textFont("segeoUiFont");
 
-  mapClass.display();
+    // //Calculate duration
+    // for (let i = 0; i < mobilityOptions.length; i++) {
+    //   mobilityOptions[i].calculateDuration();
+    // }
 
-   
+    // if (showGame && showIntermediateResult) {
+    textFont("segeoUiFont");
+
+    mapClass.display();
 
     bar.display();
 
@@ -388,61 +420,70 @@ function draw() {
     if (collisionDetectionMap.overlapping === true) {
     }
 
-
     if (bar.showToDo) {
       // show to Do
       toDoList.display();
     }
 
-    // IF Bedingung für verschiedene gender
-    // if (users[2].gender === true) {
-    //   testDragger1.display();
-    // }
-
-    if (hitBoxArray[0].location === true) {
-      titleMobi = ["Car", "Train", "Plane"];
-    }
-
-    //Anzeigen von Auswahlbuttons und SVG Hover
-    if (collisionDetectionMap.overlapping === true) {
-      for (let i = 0; i < 3; i++) {
-        mobilityOptions[i].hidden = false;
-      }
-      showSVG();
-    }
-    for (let i = 0; i < 3; i++) {
-      if (mobilityOptions[i].selected === true) {
-        for (let i = 0; i < 3; i++) {
-          mobilityOptions[i].hidden = true;
-        }
-
-  // show to Do
-  if (bar.showToDo) {
-    toDoList.display();
-
-    // // initiate and show assignments
-    // for (let i = 0; i < 5; i++) {
-    //   assignmentArray[i] = toDoList.assignment(i + 20, "Test");
-    // }
-  }
-
-  // show intermediate result
-  if (showIntermediateResult) {
-    resultI.display();
-    buttonStartTimeAgain.display();
-  }
-
-
-        hideSVG();
-        // mobilityOptions[i].selected = false;
-      }
-    }
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 5; i++) {
       mobilityOptions[i].display();
     }
 
-    console.log(hitBoxArray[0].location);
-    console.log(titleMobi);
+    //Anzeigen von Auswahlbuttons und SVG Hover
+
+    // hitBoxArray [0]= Messe
+    // hitBoxArray [1]= Kunde1
+    // hitBoxArray [2]= Kunde 2
+    // hitBoxArray [3]= Tochterfirma
+    // hitBoxArray [4]= Home wird nicht benötigt
+    // hitBoxArray [5]= Firma
+    if (collisionDetectionMap.overlapping === true) {
+      for (let i = 0; i < hitBoxArray.length; i++) {
+        if (hitBoxArray[i].location === true) {
+          mobilityOptions[0].hidden = false;
+          mobilityOptions[1].hidden = false;
+          if (
+            hitBoxArray[0].location ||
+            hitBoxArray[2].location ||
+            hitBoxArray[3].location
+          ) {
+            mobilityOptions[2].hidden = false;
+          }
+          if (hitBoxArray[1].location) {
+            mobilityOptions[4].hidden = false;
+          }
+          if (hitBoxArray[5].location) {
+            mobilityOptions[3].hidden = false;
+          }
+
+          showSVG();
+        }
+      }
+    }
+    for (let i = 0; i < 5; i++) {
+      if (mobilityOptions[i].selected === true) {
+        for (let i = 0; i < 5; i++) {
+          mobilityOptions[i].hidden = true;
+        }
+        hideSVG();
+      }
+    }
+    // show to Do
+    if (bar.showToDo) {
+      toDoList.display();
+
+      // // initiate and show assignments
+      // for (let i = 0; i < 5; i++) {
+      //   assignmentArray[i] = toDoList.assignment(i + 20, "Test");
+      // }
+    }
+
+    // show intermediate result
+    if (showIntermediateResult) {
+      resultI.display();
+      buttonStartTimeAgain.display();
+    }
+    console.log(mobilityOptions);
 
     //console.log(collisionDetectionMap.overlapping);
   }
@@ -464,18 +505,20 @@ function mouseClicked() {
   for (let arrayObject of hitBoxArray) {
     arrayObject.mouseClicked();
   }
-  for (let i = 0; i < 3; i++) {
+
+  //Mobility options
+  for (let i = 0; i < 5; i++) {
     if (mobilityOptions[i].hidden === false) {
       mobilityOptions[i].mouseClicked();
     }
   }
+
+  //Gender selection
   if (showGame === false) {
     for (let i = 0; i < 3; i++) {
       users[i].mouseClicked();
     }
   }
-
-=======
 
   // restart Time
   if (buttonStartTimeAgain.mouseClicked()) {
@@ -483,7 +526,6 @@ function mouseClicked() {
   }
 
   hideSVG();
-
 }
 
 window.mouseClicked = mouseClicked;

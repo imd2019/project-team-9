@@ -1,16 +1,26 @@
 import BasicObjectText from "./basicObjectText.js";
 
 export default class MobilityOption extends BasicObjectText {
-  constructor(x, y, width, height, titleMobi) {
+  constructor(
+    x,
+    y,
+    width,
+    height,
+    cost,
+    velocity,
+    enviromentalInfluence,
+    duration
+  ) {
     super(x, y, width, height);
-    // this.cost = cost;
-    // this.trackLength = trackLength;
-    // this.duration = duration;
-    // this.enviromentalInfluence = enviromentalInfluence;
-    // this.productivityInfluence = productivityInfluence;
+    this.cost = cost;
+    this.velocity = velocity;
+
+    this.enviromentalInfluence = enviromentalInfluence;
+
+    // this.satisfactionInfluence = satisfactionInfluence;
     this.hidden = true;
     this.selected = false;
-    this.titleMobi = titleMobi;
+    this.duration = duration;
   }
 
   display() {
@@ -26,8 +36,11 @@ export default class MobilityOption extends BasicObjectText {
       rect(this.x, this.y, this.width, this.height, 10);
 
       pop();
-      text(this.titleMobi, this.x + this.width / 2, this.y + this.height / 2);
     }
+  }
+
+  calculateDuration(trackLength, velocity) {
+    this.duration = trackLength / velocity;
   }
 
   clicked() {
