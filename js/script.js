@@ -381,11 +381,6 @@ function draw() {
   if (showGame === true) {
     mapClass.display();
 
-    // //Calculate duration
-    // for (let i = 0; i < mobilityOptions.length; i++) {
-    //   mobilityOptions[i].calculateDuration();
-    // }
-
     // if (showGame && showIntermediateResult) {
     textFont("segeoUiFont");
 
@@ -466,6 +461,17 @@ function draw() {
           mobilityOptions[i].hidden = true;
         }
         hideSVG();
+      }
+    }
+
+    //CALCULATE DURATION
+    for (let i = 0; i < mobilityOptions.length; i++) {
+      if (hitBoxArray[i].location) {
+        //Minus One because Call does not have a travel duration (otherwise it would be infinite LOL)
+        for (let j = 0; j < mobilityOptions.length - 1; j++) {
+          mobilityOptions[j].duration =
+            hitBoxArray[i].trackLength / mobilityOptions[j].velocity;
+        }
       }
     }
     // show to Do
