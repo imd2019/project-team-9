@@ -17,8 +17,11 @@ let hourTimer = 6;
 let minuteTimer = 0;
 let timerDay = 1;
 let time = 0;
+let showIntermediateResult = false;
 
+// load font
 let rokkittFont = loadFont("./assets/Rokkitt-Bold.ttf");
+let segeoUiFont = loadFont("./assets/segoeuisl.ttf");
 
 // load images
 let mapImage = loadImage("./assets/map.png");
@@ -43,6 +46,8 @@ let sun = loadImage("./assets/sun.png");
 
 let toDoBG = loadImage("./assets/toDo_BG.png");
 let close = loadImage("./assets/close.png");
+let toDoBox = loadImage("./assets/toDo.png");
+let toDoBoxDone = loadImage("./assets/toDo_done.png");
 
 // ==== INITIATE OBJECTS ====
 let mapClass = new BasicObjectImage(0, 0, windowWidth, windowHeight, mapImage);
@@ -201,8 +206,11 @@ let toDoList = new ToDo(
   scaleX,
   scaleY,
   toDoBG,
-  close
+  close,
+  toDoBG,
+  toDoBoxDone
 );
+let assignmentArray = [];
 
 // faces
 let facesArray = [];
@@ -264,7 +272,9 @@ day.setFont(rokkittFont);
 
 // set Time
 function setTime() {
-  timerAll++;
+  if (!showIntermediateResult) {
+    timerAll++;
+  }
 
   if (timerAll === 30) {
     minuteTimer++;
@@ -276,7 +286,8 @@ function setTime() {
     hourTimer++;
   }
 
-  if (hourTimer === 20) {
+  if (hourTimer === 7) {
+    showIntermediateResult = true;
     minuteTimer = 0;
     hourTimer = 6;
     timerDay++;
@@ -298,6 +309,26 @@ function setTime() {
   return time;
 }
 
+// intermediate result
+let resultI = new BasicObjectImage(
+  windowWidth / 2,
+  windowHeight / 2,
+  400,
+  300,
+  toDoBG
+);
+
+let buttonStartTimeAgain = new BasicObjectText(
+  windowWidth / 2 + 50,
+  windowHeight / 2 + 50,
+  100,
+  50,
+  10,
+  "pink",
+  "Start Time again",
+  30
+);
+
 // ==== DRAW ====
 function draw() {
   //User selection display
@@ -317,8 +348,16 @@ function draw() {
     }
   }
 
+
   if (showGame === true) {
     mapClass.display();
+=======
+  // if (showGame && showIntermediateResult) {
+  textFont("segeoUiFont");
+
+  mapClass.display();
+
+   
 
     bar.display();
 
@@ -349,6 +388,7 @@ function draw() {
     if (collisionDetectionMap.overlapping === true) {
     }
 
+
     if (bar.showToDo) {
       // show to Do
       toDoList.display();
@@ -375,6 +415,23 @@ function draw() {
         for (let i = 0; i < 3; i++) {
           mobilityOptions[i].hidden = true;
         }
+
+  // show to Do
+  if (bar.showToDo) {
+    toDoList.display();
+
+    // // initiate and show assignments
+    // for (let i = 0; i < 5; i++) {
+    //   assignmentArray[i] = toDoList.assignment(i + 20, "Test");
+    // }
+  }
+
+  // show intermediate result
+  if (showIntermediateResult) {
+    resultI.display();
+    buttonStartTimeAgain.display();
+  }
+
 
         hideSVG();
         // mobilityOptions[i].selected = false;
@@ -417,6 +474,16 @@ function mouseClicked() {
       users[i].mouseClicked();
     }
   }
+
+=======
+
+  // restart Time
+  if (buttonStartTimeAgain.mouseClicked()) {
+    showIntermediateResult = false;
+  }
+
+  hideSVG();
+
 }
 
 window.mouseClicked = mouseClicked;
