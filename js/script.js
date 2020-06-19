@@ -24,7 +24,7 @@ let rokkittFont = loadFont("./assets/Rokkitt-Bold.ttf");
 let segeoUiFont = loadFont("./assets/segoeuisl.ttf");
 
 // load images
-let mapImage = loadImage("./assets/map.png");
+let mapImage = loadImage("./assets/Map 2.png");
 
 let sheImage = loadImage("./assets/she.png");
 let heImage = loadImage("./assets/he.png");
