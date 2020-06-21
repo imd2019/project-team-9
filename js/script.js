@@ -143,6 +143,7 @@ let mobilityOptionButton;
 let cost = [0.5, 0.24, 0.3, 0.53, 0];
 let velocity = [120, 150, 1000, 80, 0];
 let enviromentalInfluence = [147, 32, 230, 80, 0];
+let titlemobi = ["Auto", "Zug", "Flugzeug", "Bus", "Call"];
 
 // mobilityOptions[0] = Auto
 // mobilityOptions[1] = Zug
@@ -158,7 +159,8 @@ for (let i = 0; i < 5; i++) {
       500,
       cost[i],
       velocity[i],
-      enviromentalInfluence[i]
+      enviromentalInfluence[i],
+      titlemobi[i]
     );
   }
 
@@ -170,7 +172,8 @@ for (let i = 0; i < 5; i++) {
       500,
       cost[i],
       velocity[i],
-      enviromentalInfluence[i]
+      enviromentalInfluence[i],
+      titlemobi[i]
     );
   }
 
@@ -265,6 +268,9 @@ for (let i = 0; i < 5; i++) {
   facesArray[i] = new Draggable(490 + i * 65, 5, 50, 50, imageFace);
 }
 
+for (let i = 0; i < facesArray.length; i++) {
+  facesArray[i].setPreferences();
+}
 // make faces scaleable
 for (let arrayObject of facesArray) {
   arrayObject.x *= scaleX;
@@ -359,6 +365,10 @@ let buttonStartTimeAgain = new BasicObjectText(
   30
 );
 
+// enviroment value
+let enviromentValue = 0;
+let maximalCosts = 0;
+
 // ==== DRAW ====
 function draw() {
   //User selection display
@@ -404,15 +414,17 @@ function draw() {
     // faces
     for (let i = 0; i < facesArray.length; i++) {
       facesArray[i].display();
-      facesArray[i].mouseClicked();
-      if (facesArray[i].clickTest) {
-        facesArray[i].clicked();
-      }
-    }
 
-    // collision detection
-    collisionDetectionMap.detection(facesArray, hitBoxArray);
-    if (collisionDetectionMap.overlapping === true) {
+      //How to say all Faces cant be moves while selecting
+      for (let j = 0; j < mobilityOptions.length; j++) {
+        if (mobilityOptions[j].hidden) {
+          facesArray[i].mouseClicked();
+        }
+
+        if (facesArray[i].clickTest) {
+          facesArray[i].clicked();
+        }
+      }
     }
 
     if (bar.showToDo) {
@@ -422,6 +434,12 @@ function draw() {
 
     for (let i = 0; i < 5; i++) {
       mobilityOptions[i].display();
+      // mobilityOptions[i].calculateValues(
+      //   hitBoxArray,
+      //   mobilityOptions,
+      //   enviromentValue,
+      //   maximalCosts
+      // );
     }
 
     //Anzeigen von Auswahlbuttons und SVG Hover
@@ -434,20 +452,20 @@ function draw() {
     // hitBoxArray [5]= Firma
     if (collisionDetectionMap.overlapping === true) {
       for (let i = 0; i < hitBoxArray.length; i++) {
-        if (hitBoxArray[i].location === true) {
+        if (hitBoxArray[i].locationSelection === true) {
           mobilityOptions[0].hidden = false;
           mobilityOptions[1].hidden = false;
           if (
-            hitBoxArray[0].location ||
-            hitBoxArray[2].location ||
-            hitBoxArray[3].location
+            hitBoxArray[0].locationSelection ||
+            hitBoxArray[2].locationSelection ||
+            hitBoxArray[3].locationSelection
           ) {
             mobilityOptions[2].hidden = false;
           }
-          if (hitBoxArray[1].location) {
+          if (hitBoxArray[1].locationSelection) {
             mobilityOptions[4].hidden = false;
           }
-          if (hitBoxArray[5].location) {
+          if (hitBoxArray[5].locationSelection) {
             mobilityOptions[3].hidden = false;
           }
 
@@ -459,14 +477,20 @@ function draw() {
       if (mobilityOptions[i].selected === true) {
         for (let i = 0; i < 5; i++) {
           mobilityOptions[i].hidden = true;
+
+          collisionDetectionMap.overlapping = false;
         }
         hideSVG();
       }
     }
 
-    //CALCULATE DURATION
-    for (let i = 0; i < mobilityOptions.length; i++) {
-      if (hitBoxArray[i].location) {
+    // collision detection
+    collisionDetectionMap.detection(facesArray, hitBoxArray);
+
+    //CALCULATE DURATION & ENVIROMENTINFLUENCE & COSTS
+    //Werte sind nur für Hinfahrt
+    for (let i = 0; i < hitBoxArray.length; i++) {
+      if (hitBoxArray[i].locationSelection) {
         //Minus One because Call does not have a travel duration (otherwise it would be infinite LOL)
         for (let j = 0; j < mobilityOptions.length - 1; j++) {
           mobilityOptions[j].duration =
@@ -474,6 +498,24 @@ function draw() {
         }
       }
     }
+
+    for (let i = 0; i < hitBoxArray.length; i++) {
+      if (hitBoxArray[i].locationSelection) {
+        facesArray[i].isAvailable = false;
+        console.log(facesArray[1].isAvailable);
+      }
+    }
+
+    //RESETTING CONDITIONS FOR MOBILITY OPTION DISPLAY IF SOMETHING HAS BEEN SELECTED, ENABLING IT TO BE SHOWN AGAIN IF DRAGGED ON IT AGAIN OR SOMEWHERE ELSE
+    if (collisionDetectionMap.overlapping === false) {
+      for (let i = 0; i < 5; i++) {
+        mobilityOptions[i].selected = false;
+      }
+      for (let i = 0; i < hitBoxArray.length; i++) {
+        hitBoxArray[i].locationSelection = false;
+      }
+    }
+
     // show to Do
     if (bar.showToDo) {
       toDoList.display();
@@ -489,9 +531,10 @@ function draw() {
       resultI.display();
       buttonStartTimeAgain.display();
     }
-    console.log(mobilityOptions);
-
-    //console.log(collisionDetectionMap.overlapping);
+    //console.log(mobilityOptions);
+    // console.log(facesArray[0].satisfaction);
+    // console.log(enviromentValue);
+    // console.log(facesArray[0].workingHours);
   }
 }
 
@@ -519,6 +562,22 @@ function mouseClicked() {
     }
   }
 
+  //Wird leider in der Draw die ganze Zeit hochgerechnet, deswegen in mouseClicked
+  for (let i = 0; i < mobilityOptions.length + 1; i++) {
+    if (hitBoxArray[i].locationSelection) {
+      for (let j = 0; j < mobilityOptions.length - 1; j++) {
+        if (mobilityOptions[j].selected) {
+          enviromentValue +=
+            hitBoxArray[i].trackLength *
+            mobilityOptions[j].enviromentalInfluence;
+          maximalCosts += hitBoxArray[i].trackLength * mobilityOptions[j].cost;
+          if (!facesArray[i].isAvailable) {
+            facesArray[i].checkWorkingHours(0, mobilityOptions[j].duration);
+          }
+        }
+      }
+    }
+  }
   //Gender selection
   if (showGame === false) {
     for (let i = 0; i < 3; i++) {

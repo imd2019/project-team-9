@@ -21,7 +21,7 @@ export default class BasicObjectText {
     this.sizeText = sizeText;
     this.image = image;
     this.textFont = textFont;
-    this.location = false;
+    this.locationSelection = false;
     this.trackLength = trackLength;
   }
 
@@ -49,7 +49,7 @@ export default class BasicObjectText {
   }
 
   clicked() {
-    this.location = true;
+    this.locationSelection = true;
     console.log("Test");
   }
 
