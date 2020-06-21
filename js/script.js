@@ -248,6 +248,7 @@ let assignmentArray = [];
 // faces
 let facesArray = [];
 let imageFace;
+let chosenGenderImage = sheImage;
 
 for (let i = 0; i < 5; i++) {
   if (i === 0) {
@@ -257,7 +258,7 @@ for (let i = 0; i < 5; i++) {
     imageFace = workerTwoImage;
   }
   if (i === 2) {
-    imageFace = sheImage;
+    imageFace = chosenGenderImage;
   }
   if (i === 3) {
     imageFace = workerThreeImage;
@@ -388,13 +389,22 @@ function draw() {
     }
   }
 
-  if (showGame === true) {
+  if (showGame) {
     mapClass.display();
+
+    // chose gender Image
+    if (users[0].gender) {
+      chosenGenderImage = sheImage;
+    }
+    if (users[1].gender) {
+      chosenGenderImage = theyImage;
+    }
+    if (users[2].gender) {
+      chosenGenderImage = heImage;
+    }
 
     // if (showGame && showIntermediateResult) {
     textFont("segeoUiFont");
-
-    mapClass.display();
 
     bar.display();
 
@@ -409,22 +419,6 @@ function draw() {
     // hitBoxes
     for (let arrayObject of hitBoxArray) {
       arrayObject.display();
-    }
-
-    // faces
-    for (let i = 0; i < facesArray.length; i++) {
-      facesArray[i].display();
-
-      //How to say all Faces cant be moves while selecting
-      for (let j = 0; j < mobilityOptions.length; j++) {
-        if (mobilityOptions[j].hidden) {
-          facesArray[i].mouseClicked();
-        }
-
-        if (facesArray[i].clickTest) {
-          facesArray[i].clicked();
-        }
-      }
     }
 
     if (bar.showToDo) {
@@ -477,7 +471,6 @@ function draw() {
       if (mobilityOptions[i].selected === true) {
         for (let i = 0; i < 5; i++) {
           mobilityOptions[i].hidden = true;
-
           collisionDetectionMap.overlapping = false;
         }
         hideSVG();
@@ -487,55 +480,63 @@ function draw() {
     // collision detection
     collisionDetectionMap.detection(facesArray, hitBoxArray);
 
-    //CALCULATE DURATION & ENVIROMENTINFLUENCE & COSTS
-    //Werte sind nur für Hinfahrt
-    for (let i = 0; i < hitBoxArray.length; i++) {
-      if (hitBoxArray[i].locationSelection) {
-        //Minus One because Call does not have a travel duration (otherwise it would be infinite LOL)
-        for (let j = 0; j < mobilityOptions.length - 1; j++) {
-          mobilityOptions[j].duration =
-            hitBoxArray[i].trackLength / mobilityOptions[j].velocity;
-        }
+    // faces
+    for (let i = 0; i < facesArray.length; i++) {
+      facesArray[i].display();
+
+      //How to say all Faces cant be moved while selecting --> overlapping wird ständig wieder true gesetzt
+      if (facesArray[i].isAvailable) {
+        facesArray[i].mouseClicked();
+      }
+
+      if (facesArray[i].clickTest) {
+        facesArray[i].clicked();
       }
     }
-
-    for (let i = 0; i < hitBoxArray.length; i++) {
-      if (hitBoxArray[i].locationSelection) {
-        facesArray[i].isAvailable = false;
-        console.log(facesArray[1].isAvailable);
-      }
-    }
-
-    //RESETTING CONDITIONS FOR MOBILITY OPTION DISPLAY IF SOMETHING HAS BEEN SELECTED, ENABLING IT TO BE SHOWN AGAIN IF DRAGGED ON IT AGAIN OR SOMEWHERE ELSE
-    if (collisionDetectionMap.overlapping === false) {
-      for (let i = 0; i < 5; i++) {
-        mobilityOptions[i].selected = false;
-      }
-      for (let i = 0; i < hitBoxArray.length; i++) {
-        hitBoxArray[i].locationSelection = false;
-      }
-    }
-
-    // show to Do
-    if (bar.showToDo) {
-      toDoList.display();
-
-      // // initiate and show assignments
-      // for (let i = 0; i < 5; i++) {
-      //   assignmentArray[i] = toDoList.assignment(i + 20, "Test");
-      // }
-    }
-
-    // show intermediate result
-    if (showIntermediateResult) {
-      resultI.display();
-      buttonStartTimeAgain.display();
-    }
-    //console.log(mobilityOptions);
-    // console.log(facesArray[0].satisfaction);
-    // console.log(enviromentValue);
-    // console.log(facesArray[0].workingHours);
   }
+
+  //CALCULATE DURATION & ENVIROMENTINFLUENCE & COSTS
+  //Werte sind nur für Hinfahrt
+  for (let i = 0; i < hitBoxArray.length; i++) {
+    if (hitBoxArray[i].locationSelection) {
+      //Minus One because Call does not have a travel duration (otherwise it would be infinite LOL)
+      for (let j = 0; j < mobilityOptions.length - 1; j++) {
+        mobilityOptions[j].duration =
+          hitBoxArray[i].trackLength / mobilityOptions[j].velocity;
+      }
+      facesArray[collisionDetectionMap.indexOfFace].isAvailable = false;
+    }
+  }
+
+  //RESETTING CONDITIONS FOR MOBILITY OPTION DISPLAY IF SOMETHING HAS BEEN SELECTED, ENABLING IT TO BE SHOWN AGAIN IF DRAGGED ON IT AGAIN OR SOMEWHERE ELSE
+  if (collisionDetectionMap.overlapping === false) {
+    for (let i = 0; i < 5; i++) {
+      mobilityOptions[i].selected = false;
+    }
+    for (let i = 0; i < hitBoxArray.length; i++) {
+      hitBoxArray[i].locationSelection = false;
+    }
+  }
+
+  // show to Do
+  if (bar.showToDo) {
+    toDoList.display();
+
+    // // initiate and show assignments
+    // for (let i = 0; i < 5; i++) {
+    //   assignmentArray[i] = toDoList.assignment(i + 20, "Test");
+    // }
+  }
+
+  // show intermediate result
+  if (showIntermediateResult) {
+    resultI.display();
+    buttonStartTimeAgain.display();
+  }
+  //console.log(mobilityOptions);
+  // console.log(facesArray[0].satisfaction);
+  // console.log(enviromentValue);
+  // console.log(facesArray[0].workingHours);
 }
 
 // ==== MOUSE CLICKED ====
@@ -557,7 +558,7 @@ function mouseClicked() {
 
   //Mobility options
   for (let i = 0; i < 5; i++) {
-    if (mobilityOptions[i].hidden === false) {
+    if (!mobilityOptions[i].hidden) {
       mobilityOptions[i].mouseClicked();
     }
   }
@@ -578,8 +579,9 @@ function mouseClicked() {
       }
     }
   }
+
   //Gender selection
-  if (showGame === false) {
+  if (!showGame) {
     for (let i = 0; i < 3; i++) {
       users[i].mouseClicked();
     }
