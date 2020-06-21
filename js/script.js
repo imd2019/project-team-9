@@ -485,9 +485,10 @@ function draw() {
       facesArray[i].display();
 
       //How to say all Faces cant be moved while selecting --> overlapping wird ständig wieder true gesetzt
-      if (facesArray[i].isAvailable) {
-        facesArray[i].mouseClicked();
-      }
+      //
+      // if (!collisionDetectionMap.overlapping) {
+      facesArray[i].mouseClicked();
+      // }
 
       if (facesArray[i].clickTest) {
         facesArray[i].clicked();
@@ -558,7 +559,7 @@ function mouseClicked() {
 
   //Mobility options
   for (let i = 0; i < 5; i++) {
-    if (!mobilityOptions[i].hidden) {
+    if (mobilityOptions[i].hidden === false) {
       mobilityOptions[i].mouseClicked();
     }
   }

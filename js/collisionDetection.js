@@ -1,5 +1,6 @@
 export default class CollisionDetection {
   constructor() {
+    this.overlapping = false;
     this.indexOfFace;
     this.indexOfHitBox;
   }
@@ -9,6 +10,7 @@ export default class CollisionDetection {
       for (let objectTwo of arrayTwo) {
         if (this.isOverlapping(objectOne, objectTwo)) {
           console.log("Die Rechtecke überlappen");
+          this.overlapping = true;
           this.getIndexOfArrays(arrayOne, arrayTwo, objectOne, objectTwo);
         }
       }

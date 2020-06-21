@@ -8,7 +8,6 @@ export default class Draggable extends BasicObjectImage {
     this.workingHours = 0;
     this.isAvailable = true;
     this.satisfaction = 0;
-    this.overlapping = false;
   }
 
   clicked() {
