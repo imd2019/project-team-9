@@ -9,9 +9,9 @@ export default class ToDo extends BasicObjectImage {
     scaleX,
     scaleY,
     image,
-    imageClose,
-    imageAssignment,
-    imageAssignmentDone
+    imageClose
+    // imageAssignment,
+    // imageAssignmentDone
   ) {
     super(x, y, width, height, image);
     this.scaleX = scaleX;
@@ -21,13 +21,13 @@ export default class ToDo extends BasicObjectImage {
     this.yC = this.y - this.height / 2 + 20;
     this.widthC = 25 * scaleX;
     this.heightC = 25 * scaleY;
-    this.imageAssignment = imageAssignment;
-    this.imageAssignmentDone = imageAssignmentDone;
-    this.imageA = imageAssignment;
-    this.xA = this.x - this.width / 2 + 50;
-    this.yA = this.y - this.width / 2 + this.offsetYA;
-    this.widthA = 40 * scaleX;
-    this.assignmentDone = false;
+    // this.imageAssignment = imageAssignment;
+    // this.imageAssignmentDone = imageAssignmentDone;
+    // this.imageA = imageAssignment;
+    // this.xA = this.x - this.width / 2 + 50;
+    // this.yA = this.y - this.width / 2 + this.offsetYA;
+    // this.widthA = 40 * scaleX;
+    // this.assignmentDone = false;
   }
 
   display() {
@@ -44,13 +44,13 @@ export default class ToDo extends BasicObjectImage {
     image(this.imageClose, this.xC, this.yC, this.widthC, this.heightC);
   }
 
-  assignment(offsetYA, textA) {
-    if (this.assignmentDone) {
-      this.imageA = this.imageAssignmentDone;
-    }
-    image(this.imageA, this.xA, this.yA + offsetYA, this.widthA, this.widthA);
-    text(textA, this.xA + 30 * this.scaleX, this.yA + this.widthA / 2);
-  }
+  // assignment(offsetYA, textA) {
+  //   if (this.assignmentDone) {
+  //     this.imageA = this.imageAssignmentDone;
+  //   }
+  //   image(this.imageA, this.xA, this.yA + offsetYA, this.widthA, this.widthA);
+  //   text(textA, this.xA + 30 * this.scaleX, this.yA + this.widthA / 2);
+  // }
 
   hitTest(x, y) {
     if (

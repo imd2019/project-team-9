@@ -7,6 +7,7 @@ import CollisionDetection from "./collisionDetection.js";
 import User from "./User.js";
 import StatusBar from "./statusBar.js";
 import ToDo from "./toDo.js";
+import Assignment from "./assignment.js";
 
 // variables
 let scaleX = windowWidth / 1536;
@@ -243,7 +244,23 @@ let toDoList = new ToDo(
   toDoBG,
   toDoBoxDone
 );
+
+// assignments
 let assignmentArray = [];
+for (let i = 0; i < 5; i++) {
+  assignmentArray[i] = new Assignment(
+    550,
+    200 + i * 70,
+    50,
+    50,
+    scaleX,
+    scaleY,
+    toDoBox,
+    toDoBox,
+    toDoBoxDone,
+    "Test"
+  );
+}
 
 // faces
 let facesArray = [];
@@ -323,7 +340,7 @@ function setTime() {
     hourTimer++;
   }
 
-  if (hourTimer === 7) {
+  if (hourTimer === 20) {
     showIntermediateResult = true;
     minuteTimer = 0;
     hourTimer = 6;
@@ -375,17 +392,14 @@ function draw() {
   //User selection display
   fill(186, 226, 227);
   rect(0, 0, windowWidth, windowHeight);
+
   for (let i = 0; i < 3; i++) {
     if (users[i].userSelection) {
-      for (let i = 0; i < 3; i++) {
-        users[i].display();
-      }
+      users[i].display();
     } //boolean to make it disappear after selecting one
     if (!users[i].userSelection) {
-      for (let i = 0; i < 3; i++) {
-        users[i].userSelection = false;
-        showGame = true;
-      }
+      users[i].userSelection = false;
+      showGame = true;
     }
   }
 
@@ -421,11 +435,6 @@ function draw() {
       arrayObject.display();
     }
 
-    if (bar.showToDo) {
-      // show to Do
-      toDoList.display();
-    }
-
     for (let i = 0; i < 5; i++) {
       mobilityOptions[i].display();
       // mobilityOptions[i].calculateValues(
@@ -444,9 +453,9 @@ function draw() {
     // hitBoxArray [3]= Tochterfirma
     // hitBoxArray [4]= Home wird nicht benötigt
     // hitBoxArray [5]= Firma
-    if (collisionDetectionMap.overlapping === true) {
+    if (collisionDetectionMap.overlapping) {
       for (let i = 0; i < hitBoxArray.length; i++) {
-        if (hitBoxArray[i].locationSelection === true) {
+        if (hitBoxArray[i].locationSelection) {
           mobilityOptions[0].hidden = false;
           mobilityOptions[1].hidden = false;
           if (
@@ -494,23 +503,18 @@ function draw() {
         facesArray[i].clicked();
       }
     }
-  }
 
-  //CALCULATE DURATION & ENVIROMENTINFLUENCE & COSTS
-  //Werte sind nur für Hinfahrt
-  for (let i = 0; i < hitBoxArray.length; i++) {
-    if (hitBoxArray[i].locationSelection) {
-      //Minus One because Call does not have a travel duration (otherwise it would be infinite LOL)
-      for (let j = 0; j < mobilityOptions.length - 1; j++) {
-        mobilityOptions[j].duration =
-          hitBoxArray[i].trackLength / mobilityOptions[j].velocity;
+    // show to Do
+    if (bar.showToDo) {
+      toDoList.display();
+      for (let arrayObject of assignmentArray) {
+        arrayObject.display();
       }
-      facesArray[collisionDetectionMap.indexOfFace].isAvailable = false;
     }
   }
 
   //RESETTING CONDITIONS FOR MOBILITY OPTION DISPLAY IF SOMETHING HAS BEEN SELECTED, ENABLING IT TO BE SHOWN AGAIN IF DRAGGED ON IT AGAIN OR SOMEWHERE ELSE
-  if (collisionDetectionMap.overlapping === false) {
+  if (!collisionDetectionMap.overlapping) {
     for (let i = 0; i < 5; i++) {
       mobilityOptions[i].selected = false;
     }
@@ -519,25 +523,11 @@ function draw() {
     }
   }
 
-  // show to Do
-  if (bar.showToDo) {
-    toDoList.display();
-
-    // // initiate and show assignments
-    // for (let i = 0; i < 5; i++) {
-    //   assignmentArray[i] = toDoList.assignment(i + 20, "Test");
-    // }
-  }
-
   // show intermediate result
   if (showIntermediateResult) {
     resultI.display();
     buttonStartTimeAgain.display();
   }
-  //console.log(mobilityOptions);
-  // console.log(facesArray[0].satisfaction);
-  // console.log(enviromentValue);
-  // console.log(facesArray[0].workingHours);
 }
 
 // ==== MOUSE CLICKED ====
@@ -564,7 +554,19 @@ function mouseClicked() {
     }
   }
 
-  //Wird leider in der Draw die ganze Zeit hochgerechnet, deswegen in mouseClicked
+  //CALCULATE DURATION & ENVIROMENTINFLUENCE & COSTS
+  //Werte sind nur für Hinfahrt
+  for (let i = 0; i < hitBoxArray.length; i++) {
+    if (hitBoxArray[i].locationSelection) {
+      //Minus One because Call does not have a travel duration (otherwise it would be infinite LOL)
+      for (let j = 0; j < mobilityOptions.length - 1; j++) {
+        mobilityOptions[j].duration =
+          hitBoxArray[i].trackLength / mobilityOptions[j].velocity;
+      }
+      facesArray[collisionDetectionMap.indexOfFace].isAvailable = false;
+    }
+  }
+
   for (let i = 0; i < mobilityOptions.length + 1; i++) {
     if (hitBoxArray[i].locationSelection) {
       for (let j = 0; j < mobilityOptions.length - 1; j++) {
