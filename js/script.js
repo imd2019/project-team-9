@@ -605,13 +605,27 @@ window.draw = draw;
 function showSVG() {
   //ACCESSING ALL ELEMENTS OF SAME CLASS IN HTML
   var elements = document.getElementsByClassName("svg");
+  var bus = document.getElementById("bus");
+  var call = document.getElementById("call");
+  var plane = document.getElementById("plane");
   for (var i = 0; i < elements.length; i++) {
-    // if (elements[i].style.display === "none") {
     elements[i].style.display = "block";
-    // }
-    // else elements[i].style.display = "none";
   }
-  // console.log(elements);
+  if (hitBoxArray[5].locationSelection) {
+    bus.style.display = "block";
+  }
+
+  if (hitBoxArray[1].locationSelection) {
+    call.style.display = "block";
+  }
+
+  if (
+    hitBoxArray[0].locationSelection ||
+    hitBoxArray[2].locationSelection ||
+    hitBoxArray[3].locationSelection
+  ) {
+    plane.style.display = "block";
+  }
 }
 window.showSVG = showSVG;
 
@@ -620,12 +634,14 @@ window.showSVG = showSVG;
 function hideSVG() {
   //ACCESSING ALL ELEMENTS OF SAME CLASS IN HTML
   var elements = document.getElementsByClassName("svg");
+  var bus = document.getElementById("bus");
+  var call = document.getElementById("call");
+  var plane = document.getElementById("plane");
   for (var i = 0; i < elements.length; i++) {
-    // if (elements[i].style.display === "none") {
     elements[i].style.display = "none";
-    // }
-    // else elements[i].style.display = "none";
   }
-  // console.log(elements);
+  bus.style.display = "none";
+  call.style.display = "none";
+  plane.style.display = "none";
 }
 window.hideSVG = hideSVG;

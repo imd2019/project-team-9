@@ -6,16 +6,39 @@ body {
 
 .svg {
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
   display: none;
 }
 
-#bus {
-  transform: translate(26.6vw, 27vh);
+.thirdoption {
+  opacity: 1;
   position: absolute;
   /* display: none; */
 }
 
+#bus {
+  transform: translate(60.5vw, 27vh);
+  position: absolute;
+  display: none;
+}
+
+#call {
+  transform: translate(60.5vw, 27vh);
+  position: absolute;
+  display: none;
+}
+
+#plane {
+  transform: translate(60.5vw, 27vh);
+  position: absolute;
+  display: none;
+}
 #car {
   transform: translate(23.9vw, 27vh);
+  position: absolute;
+}
+
+#train {
+  transform: translate(42.2vw, 27vh);
+  position: absolute;
 }
