@@ -12,6 +12,7 @@ export default class CollisionDetection {
           console.log("Die Rechtecke überlappen");
           this.overlapping = true;
           this.getIndexOfArrays(arrayOne, arrayTwo, objectOne, objectTwo);
+          return this.indexOfHitBox;
         }
       }
     }

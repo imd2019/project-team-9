@@ -1,29 +1,21 @@
 import BasicObjectImage from "./basicObjectImage.js";
 
 export default class Assignment extends BasicObjectImage {
-  constructor(
-    x,
-    y,
-    width,
-    height,
-    scaleX,
-    scaleY,
-    image,
-    imageAssignment,
-    imageAssignmentDone,
-    text
-  ) {
+  constructor(x, y, width, height, scaleX, scaleY) {
     super(x, y, width, height, image);
     this.scaleX = scaleX;
     this.scaleY = scaleY;
-    this.image = imageAssignment;
-    this.imageAssignment = imageAssignment;
-    this.imageAssignmentDone = imageAssignmentDone;
-    this.text = text;
+    this.imageAssignment = loadImage("./assets/toDo.png"); //imageAssignment;
+    this.imageAssignmentDone = loadImage("./assets/toDo_done.png"); //imageAssignmentDone;
+    this.image;
+    this.text = "";
+    this.font;
+    this.companyIndex = 0;
+    this.assignmentDone = false;
   }
 
-  display(assignmentDone) {
-    if (assignmentDone) {
+  display() {
+    if (this.assignmentDone) {
       this.image = this.imageAssignmentDone;
     } else {
       this.image = this.imageAssignment;
@@ -35,10 +27,32 @@ export default class Assignment extends BasicObjectImage {
       this.width * this.scaleX,
       this.width * this.scaleX
     );
+
+    textFont(this.font);
     text(
       this.text,
       this.x * this.scaleX + 100,
       this.y * this.scaleY + (this.width / 2) * this.scaleY
     );
+  }
+
+  setFont(textFont) {
+    this.font = textFont;
+  }
+
+  setTextAssignments(text) {
+    this.text = text;
+  }
+
+  setCompanyIndex(indexOfCompany) {
+    this.companyIndex = indexOfCompany;
+  }
+
+  getCompanyIndex() {
+    return this.companyIndex;
+  }
+
+  setAssignmentDone() {
+    this.assignmentDone = true;
   }
 }

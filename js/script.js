@@ -19,6 +19,9 @@ let minuteTimer = 0;
 let timerDay = 1;
 let time = 0;
 let showIntermediateResult = false;
+let assignmentText = "";
+let assignmentsAmount = 5;
+let firstDay = true;
 
 // load font
 let rokkittFont = loadFont("./assets/Rokkitt-Bold.ttf");
@@ -247,20 +250,17 @@ let toDoList = new ToDo(
 
 // assignments
 let assignmentArray = [];
-for (let i = 0; i < 5; i++) {
-  assignmentArray[i] = new Assignment(
-    550,
-    200 + i * 70,
-    50,
-    50,
-    scaleX,
-    scaleY,
-    toDoBox,
-    toDoBox,
-    toDoBoxDone,
-    "Test"
-  );
-}
+// for (let i = 0; i < assignmentsAmount; i++) {
+//   assignmentArray[i] = new Assignment(
+//     550,
+//     200 + i * 70,
+//     50,
+//     50,
+//     scaleX,
+//     scaleY
+//   );
+//   assignmentArray[i].setFont(segeoUiFont);
+// }
 
 // faces
 let facesArray = [];
@@ -326,6 +326,13 @@ day.setFont(rokkittFont);
 
 // set Time
 function setTime() {
+  // initiate first Day
+
+  if (firstDay) {
+    newDay();
+    firstDay = false;
+  }
+
   if (!showIntermediateResult) {
     timerAll++;
   }
@@ -340,11 +347,39 @@ function setTime() {
     hourTimer++;
   }
 
-  if (hourTimer === 20) {
+  if (hourTimer === 7) {
     showIntermediateResult = true;
     minuteTimer = 0;
     hourTimer = 6;
     timerDay++;
+    newDay();
+  }
+
+  function newDay() {
+    assignmentArray = [];
+    loadStrings(
+      "./assets/" + timerDay + "_day_assignment.txt",
+      updateAssignment
+    );
+
+    // hier kann dann noch das Wetter und andere Risiken (Verkehr) rein
+  }
+
+  // update assignment
+  function updateAssignment(assignmentTexts) {
+    for (let i = 0; i < assignmentTexts.length; i++) {
+      assignmentArray[i] = new Assignment(
+        550,
+        200 + i * 70,
+        50,
+        50,
+        scaleX,
+        scaleY
+      );
+      assignmentArray[i].setTextAssignments(split(assignmentTexts[i], ";")[1]);
+      assignmentArray[i].setCompanyIndex(split(assignmentTexts[i], ";")[0]);
+      assignmentArray[i].setFont(segeoUiFont);
+    }
   }
 
   // set 0 before numbers less than 10
@@ -383,6 +418,17 @@ let buttonStartTimeAgain = new BasicObjectText(
   30
 );
 
+function checkAssignment(hitBoxIndex) {
+  for (let i = 0; i < assignmentArray.length; i++) {
+    //Problem: hitBoxIndex ist vom typ int, assignmentArray[i] ist ein String. Beim vergleichen kommt ddaher immer false raus, weil die Typen unterschiedlich sind.
+    //unsaubere Lösung: vor hitBoxIndex einen leeren String schreiben, damit die Zahl als String interpretiert wird
+    if ("" + hitBoxIndex === assignmentArray[i].getCompanyIndex()) {
+      assignmentArray[i].setAssignmentDone();
+      break; //damit nicht mehrere Aufgaben bei der gleichen Firma von einem Worker auf ein mal erledigt werden können.
+    }
+  }
+}
+
 // enviroment value
 let enviromentValue = 0;
 let maximalCosts = 0;
@@ -418,7 +464,7 @@ function draw() {
     }
 
     // if (showGame && showIntermediateResult) {
-    textFont("segeoUiFont");
+    // textFont(segeoUiFont);
 
     bar.display();
 
@@ -427,7 +473,6 @@ function draw() {
     day.display();
     timer.setText(setTime());
     day.setText(timerDay);
-
     imageMode(CORNER);
 
     // hitBoxes
@@ -445,8 +490,12 @@ function draw() {
       // );
     }
 
-    //Anzeigen von Auswahlbuttons und SVG Hover
+    // collision detection
+    //TODO
+    let hitBoxIndex;
+    hitBoxIndex = collisionDetectionMap.detection(facesArray, hitBoxArray);
 
+    //Anzeigen von Auswahlbuttons und SVG Hover
     // hitBoxArray [0]= Messe
     // hitBoxArray [1]= Kunde1
     // hitBoxArray [2]= Kunde 2
@@ -477,27 +526,23 @@ function draw() {
       }
     }
     for (let i = 0; i < 5; i++) {
-      if (mobilityOptions[i].selected === true) {
+      if (mobilityOptions[i].selected) {
+        checkAssignment(hitBoxIndex);
         for (let i = 0; i < 5; i++) {
           mobilityOptions[i].hidden = true;
           collisionDetectionMap.overlapping = false;
         }
+
         hideSVG();
       }
     }
 
-    // collision detection
-    collisionDetectionMap.detection(facesArray, hitBoxArray);
-
     // faces
+    let alreadyChosen = false; // determines if there is a worker thats already picked up?
     for (let i = 0; i < facesArray.length; i++) {
       facesArray[i].display();
 
-      //How to say all Faces cant be moved while selecting --> overlapping wird ständig wieder true gesetzt
-      //
-      // if (!collisionDetectionMap.overlapping) {
       facesArray[i].mouseClicked();
-      // }
 
       if (facesArray[i].clickTest) {
         facesArray[i].clicked();
@@ -549,7 +594,7 @@ function mouseClicked() {
 
   //Mobility options
   for (let i = 0; i < 5; i++) {
-    if (mobilityOptions[i].hidden === false) {
+    if (!mobilityOptions[i].hidden) {
       mobilityOptions[i].mouseClicked();
     }
   }
@@ -574,9 +619,13 @@ function mouseClicked() {
           enviromentValue +=
             hitBoxArray[i].trackLength *
             mobilityOptions[j].enviromentalInfluence;
+
           maximalCosts += hitBoxArray[i].trackLength * mobilityOptions[j].cost;
-          if (!facesArray[i].isAvailable) {
-            facesArray[i].checkWorkingHours(0, mobilityOptions[j].duration);
+
+          for (let x = 0; x < facesArray.length; x++) {
+            if (!facesArray[x].isAvailable) {
+              facesArray[x].checkWorkingHours(0, mobilityOptions[j].duration);
+            }
           }
         }
       }
@@ -602,15 +651,17 @@ window.mouseClicked = mouseClicked;
 window.draw = draw;
 
 // ==== FUNCTION SHOW ====
+let bus = document.getElementById("bus");
+let call = document.getElementById("call");
+let plane = document.getElementById("plane");
+
 function showSVG() {
   //ACCESSING ALL ELEMENTS OF SAME CLASS IN HTML
   var elements = document.getElementsByClassName("svg");
-  var bus = document.getElementById("bus");
-  var call = document.getElementById("call");
-  var plane = document.getElementById("plane");
   for (var i = 0; i < elements.length; i++) {
     elements[i].style.display = "block";
   }
+
   if (hitBoxArray[5].locationSelection) {
     bus.style.display = "block";
   }
@@ -634,9 +685,6 @@ window.showSVG = showSVG;
 function hideSVG() {
   //ACCESSING ALL ELEMENTS OF SAME CLASS IN HTML
   var elements = document.getElementsByClassName("svg");
-  var bus = document.getElementById("bus");
-  var call = document.getElementById("call");
-  var plane = document.getElementById("plane");
   for (var i = 0; i < elements.length; i++) {
     elements[i].style.display = "none";
   }

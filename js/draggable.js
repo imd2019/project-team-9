@@ -51,8 +51,8 @@ export default class Draggable extends BasicObjectImage {
     this.workingHours += activeTime + inactiveTime;
   }
 
-  checkProductivity(inactiveTime) {
-    this.productivity += (inactiveTime / this.workingHours) * 100;
+  checkProductivity(activeTime) {
+    this.productivity += (activeTime / this.workingHours) * 100;
   }
 
   checkAvailability() {
