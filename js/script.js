@@ -619,7 +619,7 @@ function mouseClicked() {
     }
   }
 
-  for (let i = 0; i < mobilityOptions.length + 1; i++) {
+  for (let i = 0; i < hitBoxArray.length + 1; i++) {
     if (hitBoxArray[i].locationSelection) {
       for (let j = 0; j < mobilityOptions.length - 1; j++) {
         if (mobilityOptions[j].selected) {
@@ -631,8 +631,9 @@ function mouseClicked() {
 
           for (let x = 0; x < facesArray.length; x++) {
             if (!facesArray[x].isAvailable) {
+              // hier wissen wir noch nicht, wie wir das assignment ansprechen können, dass gerade auch angeklickt werden sollte
               facesArray[x].checkWorkingHours(
-                assignmentArray[i].getDurationOfAssignment(),
+                assignmentArray[hitBoxIndex].getDurationOfAssignment(),
                 mobilityOptions[j].duration
               );
             }
