@@ -29,7 +29,7 @@ export default class MobilityOption extends BasicObjectText {
     //   this.hidden = true;
     // }
 
-    if (this.hidden === false) {
+    if (!this.hidden) {
       push();
 
       noStroke();
@@ -41,30 +41,6 @@ export default class MobilityOption extends BasicObjectText {
       text(this.titlemobi, this.x + this.width / 2, this.y + this.height / 2);
     }
   }
-  //Duration = inactive time
-  // calculateValues(hitBoxArray, mobilityOptions, enviromentValue, maximalCosts) {
-  //   for (let i = 0; i < mobilityOptions.length + 1; i++) {
-  //     if (hitBoxArray[i].location) {
-  //       //Minus One because Call does not have a travel duration (otherwise it would be infinite LOL)
-  //       for (let j = 0; j < mobilityOptions.length - 1; j++) {
-  //         mobilityOptions[j].duration =
-  //           hitBoxArray[i].trackLength / mobilityOptions[j].velocity;
-
-  //         if (mobilityOptions[j].selected) {
-  //           enviromentValue =
-  //             hitBoxArray[i].trackLength *
-  //             mobilityOptions[j].enviromentalInfluence;
-  //           //console.log(enviromentValue);
-
-  //           maximalCosts = hitBoxArray[i].trackLength * mobilityOptions[j].cost;
-  //         }
-  //       }
-  //     }
-  //   }
-  //   // return enviromentValue;
-  // }
-
-  // returnEnviroment() {}
 
   clicked() {
     this.selected = true;

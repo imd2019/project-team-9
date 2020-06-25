@@ -9,14 +9,18 @@ export default class Draggable extends BasicObjectImage {
     this.isAvailable = true;
     this.satisfaction = 0;
     this.totalActiveTime = 0;
+    this.isDragged = false;
+    this.alreadyChecked = false;
   }
 
   clicked() {
     if (mouseIsPressed) {
       this.x = mouseX - this.width / 2;
       this.y = mouseY - this.height / 2;
+      this.isDragged = true;
     } else {
       this.mouseReleased();
+      this.isDragged = false;
     }
   }
 
@@ -50,13 +54,10 @@ export default class Draggable extends BasicObjectImage {
 
   checkWorkingHours(activeTime, inactiveTime) {
     parseFloat(this.workingHours);
-
     this.workingHours += parseFloat(activeTime) + parseFloat(inactiveTime);
-    // console.log(this.workingHours);
 
     parseFloat(this.totalActiveTime);
     this.totalActiveTime += parseFloat(activeTime);
-    console.log(this.totalActiveTime);
   }
 
   getWorkingHours() {
@@ -74,5 +75,9 @@ export default class Draggable extends BasicObjectImage {
 
   checkAvailability() {
     return this.isAvailable;
+  }
+
+  setGenderImage(genderImage) {
+    this.image = genderImage;
   }
 }

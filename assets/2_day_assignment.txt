@@ -1,2 +1,2 @@
-2; Das ist Aufgabe 3; 5
-4; Das ist Aufgabe 4; 2
+2;Das ist Aufgabe 3;5
+4;Das ist Aufgabe 4;2

@@ -1,26 +1,29 @@
 export default class CollisionDetection {
   constructor() {
     this.overlapping = false;
-    this.indexOfFace;
-    this.indexOfHitBox;
   }
 
   detection(arrayOne, arrayTwo) {
+    let output = [];
     for (let objectOne of arrayOne) {
       for (let objectTwo of arrayTwo) {
         if (this.isOverlapping(objectOne, objectTwo)) {
           console.log("Die Rechtecke überlappen");
           this.overlapping = true;
-          this.getIndexOfArrays(arrayOne, arrayTwo, objectOne, objectTwo);
-          return this.indexOfHitBox;
+          output.push(
+            this.getIndexOfArrays(arrayOne, arrayTwo, objectOne, objectTwo)
+          );
         }
       }
     }
+    return output;
   }
 
   getIndexOfArrays(arrayOne, arrayTwo, objectOne, objectTwo) {
-    this.indexOfFace = arrayOne.indexOf(objectOne);
-    this.indexOfHitBox = arrayTwo.indexOf(objectTwo);
+    let output = [];
+    output[0] = arrayOne.indexOf(objectOne);
+    output[1] = arrayTwo.indexOf(objectTwo);
+    return output;
   }
 
   isOverlapping(objectOne, objectTwo) {

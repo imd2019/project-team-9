@@ -60,6 +60,7 @@ let mapClass = new BasicObjectImage(0, 0, windowWidth, windowHeight, mapImage);
 let hitBoxArray = [];
 // let messe = false;
 // let customer1 = false;
+let collisions = [];
 
 let hitBoxMesse = new BasicObjectText(
   435,
@@ -248,20 +249,6 @@ let toDoList = new ToDo(
   toDoBoxDone
 );
 
-// assignments
-let assignmentArray = [];
-// for (let i = 0; i < assignmentsAmount; i++) {
-//   assignmentArray[i] = new Assignment(
-//     550,
-//     200 + i * 70,
-//     50,
-//     50,
-//     scaleX,
-//     scaleY
-//   );
-//   assignmentArray[i].setFont(segeoUiFont);
-// }
-
 // faces
 let facesArray = [];
 let imageFace;
@@ -324,6 +311,8 @@ let day = new BasicObjectText(
 day.setTextColor("white");
 day.setFont(rokkittFont);
 
+let assignmentArray = [];
+
 // set Time
 function setTime() {
   // initiate first Day
@@ -357,11 +346,9 @@ function setTime() {
 
   function newDay() {
     // check productivity of the day
-
-    console.log("Why U no work?!");
+    // funktioniert noch nicht!!
     for (let i = 0; i < facesArray.length; i++) {
       facesArray[i].checkProductivity();
-      console.log(facesArray[i].getProductivity());
     }
 
     assignmentArray = [];
@@ -371,7 +358,7 @@ function setTime() {
     );
   }
 
-  // update assignment
+  // write/update assignment
   function updateAssignment(assignmentTexts) {
     for (let i = 0; i < assignmentTexts.length; i++) {
       assignmentArray[i] = new Assignment(
@@ -427,11 +414,85 @@ let buttonStartTimeAgain = new BasicObjectText(
   30
 );
 
-function checkAssignment(hitBoxIndex) {
+function showMobilityOptionsDialogue(i) {
+  //Anzeigen von Auswahlbuttons und SVG Hover
+  // collisions[i][1] = 0 = Messe
+  // collisions[i][1] = 1 = Kunde1
+  // collisions[i][1] = 2 = Kunde 2
+  // collisions[i][1] = 3 = Tochterfirma
+  // collisions[i][1] = 4 = Home wird nicht benötigt
+  // collisions[i][1] = 5 = Firma
+
+  mobilityOptions[0].hidden = false; // car
+  mobilityOptions[1].hidden = false; // train
+  if (
+    collisions[i][1] === 0 ||
+    collisions[i][1] === 2 ||
+    collisions[i][1] === 3
+  ) {
+    mobilityOptions[2].hidden = false; // airplane
+  }
+  if (collisions[i][1] === 1) {
+    mobilityOptions[4].hidden = false; // call
+  }
+  if (collisions[i][1] === 5) {
+    mobilityOptions[3].hidden = false; // bus
+  }
+
+  showSVG(i);
+}
+
+let showMobilityOptions = true;
+
+function hideMobilityOptionsDialogue() {
+  for (let i = 0; i < 5; i++) {
+    showMobilityOptions = false;
+    mobilityOptions[i].hidden = true;
+  }
+  hideSVG();
+}
+
+function calculateDuration(companyIndex, faceIndex, mobilityOptionObject) {
+  //Werte sind nur für Hinfahrt
+  mobilityOptionObject.duration =
+    hitBoxArray[companyIndex].trackLength / mobilityOptionObject.velocity;
+  facesArray[faceIndex].isAvailable = false;
+}
+
+function calculateInfluenceAndCosts(companyIndex, mobilityOptionObject) {
+  if (mobilityOptionObject.selected) {
+    enviromentValue +=
+      hitBoxArray[companyIndex].trackLength *
+      mobilityOptionObject.enviromentalInfluence;
+
+    maximalCosts +=
+      hitBoxArray[companyIndex].trackLength * mobilityOptionObject.cost;
+
+    mobilityOptionObject.selected = false;
+  }
+}
+
+function checkAssignment(companyIndex) {
   for (let i = 0; i < assignmentArray.length; i++) {
-    if (hitBoxIndex === parseInt(assignmentArray[i].getCompanyIndex())) {
+    if (companyIndex === parseInt(assignmentArray[i].getCompanyIndex())) {
       assignmentArray[i].setAssignmentDone();
-      break; //damit nicht mehrere Aufgaben bei der gleichen Firma von einem Worker auf ein mal erledigt werden können.
+      break; // just one assignment can be comleted at the same time
+    }
+  }
+}
+
+function calculateWorkingHours(companyIndex, mobilityOptionObject, faceIndex) {
+  for (let x = 0; x < facesArray.length; x++) {
+    if (!facesArray[faceIndex].alreadyCheckedWorkingHours) {
+      for (let i = 0; i < assignmentArray.length; i++) {
+        if (companyIndex === parseInt(assignmentArray[i].getCompanyIndex())) {
+          facesArray[faceIndex].checkWorkingHours(
+            assignmentArray[i].getDurationOfAssignment(),
+            mobilityOptionObject.duration
+          );
+          facesArray[faceIndex].alreadyCheckedWorkingHours = true;
+        }
+      }
     }
   }
 }
@@ -470,8 +531,7 @@ function draw() {
       chosenGenderImage = heImage;
     }
 
-    // if (showGame && showIntermediateResult) {
-    // textFont(segeoUiFont);
+    facesArray[2].setGenderImage(chosenGenderImage);
 
     bar.display();
 
@@ -498,61 +558,35 @@ function draw() {
     }
 
     // collision detection
-    //TODO
-    let hitBoxIndex;
-    hitBoxIndex = collisionDetectionMap.detection(facesArray, hitBoxArray);
+    collisions = collisionDetectionMap.detection(facesArray, hitBoxArray);
 
-    //Anzeigen von Auswahlbuttons und SVG Hover
-    // hitBoxArray [0]= Messe
-    // hitBoxArray [1]= Kunde1
-    // hitBoxArray [2]= Kunde 2
-    // hitBoxArray [3]= Tochterfirma
-    // hitBoxArray [4]= Home wird nicht benötigt
-    // hitBoxArray [5]= Firma
-    if (collisionDetectionMap.overlapping) {
-      for (let i = 0; i < hitBoxArray.length; i++) {
-        if (hitBoxArray[i].locationSelection) {
-          mobilityOptions[0].hidden = false;
-          mobilityOptions[1].hidden = false;
+    if (!mouseIsPressed) {
+      for (let i = 0; i < collisions.length; i++) {
+        for (let j = 0; j < assignmentArray.length; j++) {
           if (
-            hitBoxArray[0].locationSelection ||
-            hitBoxArray[2].locationSelection ||
-            hitBoxArray[3].locationSelection
+            collisions[i][1] === parseInt(assignmentArray[j].getCompanyIndex())
           ) {
-            mobilityOptions[2].hidden = false;
+            //show MobilityOptionsDialogue if necessary
+            if (facesArray[collisions[i][0]].isAvailable) {
+              showMobilityOptionsDialogue(i);
+              showMobilityOptions = false;
+            }
+            //then check if an option was chosen if yes, close Dialogue in hideMobilityDialogue, calculate duration, costs, environmental value an check assignment, can be found in mouseClicked
           }
-          if (hitBoxArray[1].locationSelection) {
-            mobilityOptions[4].hidden = false;
-          }
-          if (hitBoxArray[5].locationSelection) {
-            mobilityOptions[3].hidden = false;
-          }
-
-          showSVG();
         }
-      }
-    }
-    for (let i = 0; i < 5; i++) {
-      if (mobilityOptions[i].selected) {
-        checkAssignment(hitBoxIndex);
-        for (let i = 0; i < 5; i++) {
-          mobilityOptions[i].hidden = true;
-          collisionDetectionMap.overlapping = false;
-        }
-
-        hideSVG();
       }
     }
 
     // faces
-    let alreadyChosen = false; // determines if there is a worker thats already picked up?
     for (let i = 0; i < facesArray.length; i++) {
       facesArray[i].display();
-
       facesArray[i].mouseClicked();
+    }
 
+    for (let i = 0; i < facesArray.length; i++) {
       if (facesArray[i].clickTest) {
         facesArray[i].clicked();
+        break;
       }
     }
 
@@ -604,43 +638,31 @@ function mouseClicked() {
     if (!mobilityOptions[i].hidden) {
       mobilityOptions[i].mouseClicked();
     }
-  }
+    if (mobilityOptions[i].selected) {
+      for (let j = 0; j < collisions.length; j++) {
+        if (facesArray[collisions[j][0]].isAvailable) {
+          calculateDuration(
+            collisions[j][1],
+            collisions[j][0],
+            mobilityOptions[i]
+          );
 
-  //CALCULATE DURATION & ENVIROMENTINFLUENCE & COSTS
-  //Werte sind nur für Hinfahrt
-  for (let i = 0; i < hitBoxArray.length; i++) {
-    if (hitBoxArray[i].locationSelection) {
-      //Minus One because Call does not have a travel duration (otherwise it would be infinite LOL)
-      for (let j = 0; j < mobilityOptions.length - 1; j++) {
-        mobilityOptions[j].duration =
-          hitBoxArray[i].trackLength / mobilityOptions[j].velocity;
-      }
-      facesArray[collisionDetectionMap.indexOfFace].isAvailable = false;
-    }
-  }
+          calculateInfluenceAndCosts(collisions[j][1], mobilityOptions[i]);
 
-  for (let i = 0; i < hitBoxArray.length + 1; i++) {
-    if (hitBoxArray[i].locationSelection) {
-      for (let j = 0; j < mobilityOptions.length - 1; j++) {
-        if (mobilityOptions[j].selected) {
-          enviromentValue +=
-            hitBoxArray[i].trackLength *
-            mobilityOptions[j].enviromentalInfluence;
+          checkAssignment(collisions[j][1]);
 
-          maximalCosts += hitBoxArray[i].trackLength * mobilityOptions[j].cost;
-
-          for (let x = 0; x < facesArray.length; x++) {
-            if (!facesArray[x].isAvailable) {
-              // hier wissen wir noch nicht, wie wir das assignment ansprechen können, dass gerade auch angeklickt werden sollte
-              facesArray[x].checkWorkingHours(
-                assignmentArray[hitBoxIndex].getDurationOfAssignment(),
-                mobilityOptions[j].duration
-              );
-            }
-          }
+          calculateWorkingHours(
+            collisions[j][1],
+            mobilityOptions[i],
+            collisions[j][0]
+          );
         }
       }
     }
+  }
+
+  if (!showMobilityOptions) {
+    hideMobilityOptionsDialogue();
   }
 
   //Gender selection
@@ -655,7 +677,7 @@ function mouseClicked() {
     showIntermediateResult = false;
   }
 
-  hideSVG();
+  // hideSVG();
 }
 
 window.mouseClicked = mouseClicked;
@@ -666,25 +688,25 @@ let bus = document.getElementById("bus");
 let call = document.getElementById("call");
 let plane = document.getElementById("plane");
 
-function showSVG() {
+function showSVG(j) {
   //ACCESSING ALL ELEMENTS OF SAME CLASS IN HTML
   var elements = document.getElementsByClassName("svg");
   for (var i = 0; i < elements.length; i++) {
     elements[i].style.display = "block";
   }
 
-  if (hitBoxArray[5].locationSelection) {
+  if (collisions[j][1] === 5) {
     bus.style.display = "block";
   }
 
-  if (hitBoxArray[1].locationSelection) {
+  if (collisions[j][1] === 1) {
     call.style.display = "block";
   }
 
   if (
-    hitBoxArray[0].locationSelection ||
-    hitBoxArray[2].locationSelection ||
-    hitBoxArray[3].locationSelection
+    collisions[j][1] === 0 ||
+    collisions[j][1] === 2 ||
+    collisions[j][1] === 3
   ) {
     plane.style.display = "block";
   }

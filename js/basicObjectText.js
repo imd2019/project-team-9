@@ -50,7 +50,6 @@ export default class BasicObjectText {
 
   clicked() {
     this.locationSelection = true;
-    console.log("Test");
   }
 
   mouseClicked() {
