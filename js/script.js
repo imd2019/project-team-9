@@ -24,34 +24,67 @@ let assignmentsAmount = 5;
 let firstDay = true;
 
 // load font
-let rokkittFont = loadFont("./assets/Rokkitt-Bold.ttf");
-let segeoUiFont = loadFont("./assets/segoeuisl.ttf");
+let rokkittFont;
+let segeoUiFont;
 
 // load images
-let mapImage = loadImage("./assets/Map 2.png");
+let mapImage;
 
-let sheImage = loadImage("./assets/she.png");
-let heImage = loadImage("./assets/he.png");
-let theyImage = loadImage("./assets/they.png");
-let sheGenderImage = loadImage("./assets/she gender.png");
-let theyGenderImage = loadImage("./assets/they gender.png");
-let heGenderImage = loadImage("./assets/he gender.png");
+let sheImage;
+let heImage;
+let theyImage;
+let sheGenderImage;
+let theyGenderImage;
+let heGenderImage;
 
-let workerOneImage = loadImage("./assets/worker_one.png");
-let workerTwoImage = loadImage("./assets/worker_two.png");
-let workerThreeImage = loadImage("./assets/worker_three.png");
-let workerFourImage = loadImage("./assets/worker_four.png");
+let workerOneImage;
+let workerTwoImage;
+let workerThreeImage;
+let workerFourImage;
 
-let barBG = loadImage("./assets/bar.png");
-let exclamationMark = loadImage("./assets/exclamationMark.png");
-let calender = loadImage("./assets/calender.png");
-let clock = loadImage("./assets/clock.png");
-let sun = loadImage("./assets/sun.png");
+let barBG;
+let exclamationMark;
+let calender;
+let clock;
+let sun;
 
-let toDoBG = loadImage("./assets/toDo_BG.png");
-let close = loadImage("./assets/close.png");
-let toDoBox = loadImage("./assets/toDo.png");
-let toDoBoxDone = loadImage("./assets/toDo_done.png");
+let toDoBG;
+let close;
+let toDoBox;
+let toDoBoxDone;
+
+function preload() {
+  // load font
+  rokkittFont = loadFont("./assets/Rokkitt-Bold.ttf");
+  segeoUiFont = loadFont("./assets/segoeuisl.ttf");
+
+  // load images
+  mapImage = loadImage("./assets/Map 2.png");
+
+  sheImage = loadImage("./assets/she.png");
+  heImage = loadImage("./assets/he.png");
+  theyImage = loadImage("./assets/they.png");
+  sheGenderImage = loadImage("./assets/she gender.png");
+  theyGenderImage = loadImage("./assets/they gender.png");
+  heGenderImage = loadImage("./assets/he gender.png");
+
+  workerOneImage = loadImage("./assets/worker_one.png");
+  workerTwoImage = loadImage("./assets/worker_two.png");
+  workerThreeImage = loadImage("./assets/worker_three.png");
+  workerFourImage = loadImage("./assets/worker_four.png");
+
+  barBG = loadImage("./assets/bar.png");
+  exclamationMark = loadImage("./assets/exclamationMark.png");
+  calender = loadImage("./assets/calender.png");
+  clock = loadImage("./assets/clock.png");
+  sun = loadImage("./assets/sun.png");
+
+  toDoBG = loadImage("./assets/toDo_BG.png");
+  close = loadImage("./assets/close.png");
+  toDoBox = loadImage("./assets/toDo.png");
+  toDoBoxDone = loadImage("./assets/toDo_done.png");
+}
+window.preload = preload;
 
 // ==== INITIATE OBJECTS ====
 let mapClass = new BasicObjectImage(0, 0, windowWidth, windowHeight, mapImage);
@@ -346,7 +379,6 @@ function setTime() {
 
   function newDay() {
     // check productivity of the day
-    // funktioniert noch nicht!!
     for (let i = 0; i < facesArray.length; i++) {
       facesArray[i].checkProductivity();
     }
@@ -415,7 +447,7 @@ let buttonStartTimeAgain = new BasicObjectText(
 );
 
 function showMobilityOptionsDialogue(i) {
-  //Anzeigen von Auswahlbuttons und SVG Hover
+  //Show choose Buttons ans SVG hover
   // collisions[i][1] = 0 = Messe
   // collisions[i][1] = 1 = Kunde1
   // collisions[i][1] = 2 = Kunde 2
