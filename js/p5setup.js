@@ -5,6 +5,7 @@ let height = windowHeight;
 function setup() {
   sketch.createCanvas(windowWidth, windowHeight);
   sketch.frameRate(60);
+  window.gameSetup();
 }
 window.setup = setup;
 

@@ -9,9 +9,10 @@ import StatusBar from "./statusBar.js";
 import ToDo from "./toDo.js";
 import Assignment from "./assignment.js";
 
-// variables
+// ==== VARIABLES ====
 let scaleX = windowWidth / 1536;
-let scaleY = windowHeight / 750;
+let scaleY = windowWidth / 1536;
+// let scaleY = windowHeight / 750;
 
 let timerAll = 0;
 let hourTimer = 6;
@@ -24,44 +25,237 @@ let assignmentsAmount = 5;
 let firstDay = true;
 
 // load font
-let rokkittFont = loadFont("./assets/Rokkitt-Bold.ttf");
-let segeoUiFont = loadFont("./assets/segoeuisl.ttf");
+let rokkittFont;
+let segeoUiFont;
 
 // load images
-let mapImage = loadImage("./assets/Map 2.png");
+let mapImage;
 
-let sheImage = loadImage("./assets/she.png");
-let heImage = loadImage("./assets/he.png");
-let theyImage = loadImage("./assets/they.png");
-let sheGenderImage = loadImage("./assets/she gender.png");
-let theyGenderImage = loadImage("./assets/they gender.png");
-let heGenderImage = loadImage("./assets/he gender.png");
+let sheImage;
+let heImage;
+let theyImage;
+let sheGenderImage;
+let theyGenderImage;
+let heGenderImage;
 
-let workerOneImage = loadImage("./assets/worker_one.png");
-let workerTwoImage = loadImage("./assets/worker_two.png");
-let workerThreeImage = loadImage("./assets/worker_three.png");
-let workerFourImage = loadImage("./assets/worker_four.png");
+let workerOneImage;
+let workerTwoImage;
+let workerThreeImage;
+let workerFourImage;
 
-let barBG = loadImage("./assets/bar.png");
-let exclamationMark = loadImage("./assets/exclamationMark.png");
-let calender = loadImage("./assets/calender.png");
-let clock = loadImage("./assets/clock.png");
-let sun = loadImage("./assets/sun.png");
+let barBG;
+let exclamationMark;
+let calender;
+let clock;
+let sun;
 
-let toDoBG = loadImage("./assets/toDo_BG.png");
-let close = loadImage("./assets/close.png");
-let toDoBox = loadImage("./assets/toDo.png");
-let toDoBoxDone = loadImage("./assets/toDo_done.png");
+let toDoBG;
+let close;
+let toDoBox;
+let toDoBoxDone;
+
+function preload() {
+  // load font
+  rokkittFont = loadFont("./assets/Rokkitt-Bold.ttf");
+  segeoUiFont = loadFont("./assets/segoeuisl.ttf");
+
+  // load images
+  mapImage = loadImage("./assets/Map 2.png");
+
+  sheImage = loadImage("./assets/she.png");
+  heImage = loadImage("./assets/he.png");
+  theyImage = loadImage("./assets/they.png");
+  sheGenderImage = loadImage("./assets/she gender.png");
+  theyGenderImage = loadImage("./assets/they gender.png");
+  heGenderImage = loadImage("./assets/he gender.png");
+
+  workerOneImage = loadImage("./assets/worker_one.png");
+  workerTwoImage = loadImage("./assets/worker_two.png");
+  workerThreeImage = loadImage("./assets/worker_three.png");
+  workerFourImage = loadImage("./assets/worker_four.png");
+
+  barBG = loadImage("./assets/bar.png");
+  exclamationMark = loadImage("./assets/exclamationMark.png");
+  calender = loadImage("./assets/calender.png");
+  clock = loadImage("./assets/clock.png");
+  sun = loadImage("./assets/sun.png");
+
+  toDoBG = loadImage("./assets/toDo_BG.png");
+  close = loadImage("./assets/close.png");
+  toDoBox = loadImage("./assets/toDo.png");
+  toDoBoxDone = loadImage("./assets/toDo_done.png");
+}
+window.preload = preload;
 
 // ==== INITIATE OBJECTS ====
-let mapClass = new BasicObjectImage(0, 0, windowWidth, windowHeight, mapImage);
 
-// hitBoxes
+// variables for image preload
+let mapClass;
+
+// user gender
+let showGame = false;
+let userImage = [];
+let users = [];
+let user;
+
+// status bar
+let statusBarArray = [];
+let bar;
+let timer;
+let day;
+
+// to Do List
+let toDoList;
+
+// faces
+let facesArray = [];
+let imageFace;
+let chosenGenderImage = sheImage;
+
+// intermediate result
+let resultI;
+
+let gameStarted;
+
+function gameSetup() {
+  mapClass = new BasicObjectImage(0, 0, 1536 * scaleX, 750 * scaleY, mapImage);
+
+  // user gender
+  userImage.push(sheGenderImage);
+  userImage.push(theyGenderImage);
+  userImage.push(heGenderImage);
+
+  for (let i = 0; i < 3; i++) {
+    user = new User(
+      windowWidth / 2 - 525 + 400 * i,
+      windowHeight / 2 - 300,
+      300,
+      650,
+      userImage[i]
+    );
+    users.push(user);
+  }
+
+  // statusBar
+  bar = new StatusBar(
+    windowWidth / 2,
+    35,
+    750,
+    70,
+    barBG,
+    scaleX,
+    scaleY,
+    exclamationMark,
+    sun,
+    calender,
+    clock
+  );
+  statusBarArray.push(bar);
+
+  // initiate time
+  timer = new BasicObjectText(
+    bar.x + 222 * scaleX,
+    bar.y - 17,
+    105 * scaleX,
+    30 * scaleY,
+    10,
+    "rgba(0,0,0, 0)",
+    time,
+    27 * scaleX
+  );
+  timer.setTextColor("white");
+  timer.setFont(rokkittFont);
+
+  day = new BasicObjectText(
+    bar.x + 140 * scaleX,
+    bar.y - 17,
+    54 * scaleX,
+    30 * scaleY,
+    10,
+    "rgba(0,0,0, 0)",
+    timerDay,
+    27 * scaleX
+  );
+  day.setTextColor("white");
+  day.setFont(rokkittFont);
+
+  // make hitBoxes scaleable
+  for (let arrayObject of hitBoxArray) {
+    arrayObject.x *= scaleX;
+    arrayObject.y *= scaleY;
+    arrayObject.width *= scaleX;
+    arrayObject.height *= scaleY;
+  }
+
+  // make status Bar scaleable
+  for (let arrayObject of statusBarArray) {
+    arrayObject.y *= scaleY;
+    arrayObject.width *= scaleX;
+    arrayObject.height *= scaleY;
+  }
+
+  // to Do list
+  toDoList = new ToDo(
+    windowWidth / 2,
+    windowHeight / 2,
+    745 * scaleX,
+    393 * scaleY,
+    scaleX,
+    scaleY,
+    toDoBG,
+    close,
+    toDoBG,
+    toDoBoxDone
+  );
+
+  // faces
+  for (let i = 0; i < 5; i++) {
+    if (i === 0) {
+      imageFace = workerOneImage;
+    }
+    if (i === 1) {
+      imageFace = workerTwoImage;
+    }
+    if (i === 2) {
+      imageFace = chosenGenderImage;
+    }
+    if (i === 3) {
+      imageFace = workerThreeImage;
+    }
+    if (i === 4) {
+      imageFace = workerFourImage;
+    }
+    facesArray[i] = new Draggable(490 + i * 65, 5, 50, 50, imageFace);
+  }
+
+  for (let i = 0; i < facesArray.length; i++) {
+    facesArray[i].setPreferences();
+  }
+  // make faces scaleable
+  for (let arrayObject of facesArray) {
+    arrayObject.x *= scaleX;
+    arrayObject.y *= scaleY;
+    arrayObject.width *= scaleX;
+    arrayObject.height *= scaleY;
+  }
+
+  // intermediate result
+  resultI = new BasicObjectImage(
+    windowWidth / 2,
+    windowHeight / 2,
+    400,
+    300,
+    toDoBG
+  );
+
+  gameStarted = true;
+}
+
+window.gameSetup = gameSetup;
+
+// hit Boxes
 let hitBoxArray = [];
-// let messe = false;
-// let customer1 = false;
 let collisions = [];
-
 let hitBoxMesse = new BasicObjectText(
   435,
   95,
@@ -69,7 +263,7 @@ let hitBoxMesse = new BasicObjectText(
   65,
   10,
   "rgba(0,0,0,0)",
-  "Messe",
+  "",
   30,
   560
 );
@@ -82,7 +276,7 @@ let hitBoxCustomerOne = new BasicObjectText(
   125,
   10,
   "rgba(0,0,0,0)",
-  "Kunde 1",
+  "",
   30,
   180
 );
@@ -95,7 +289,7 @@ let hitBoxCustomerTwo = new BasicObjectText(
   110,
   10,
   "rgba(0,0,0,0)",
-  "Kunde 2",
+  "",
   30,
   400
 );
@@ -108,7 +302,7 @@ let hitBoxCustomerThree = new BasicObjectText(
   135,
   10,
   "rgba(0,0,0,0)",
-  "Tochterfirma",
+  "",
   30,
   90
 );
@@ -121,7 +315,7 @@ let hitBoxHome = new BasicObjectText(
   120,
   10,
   "rgba(0,0,0,0)",
-  "Home",
+  "",
   30,
   0
 );
@@ -134,7 +328,7 @@ let hitBoxCompany = new BasicObjectText(
   120,
   10,
   "rgba(0,0,0,0)",
-  "Company",
+  "",
   30,
   15
 );
@@ -185,132 +379,7 @@ for (let i = 0; i < 5; i++) {
   mobilityOptions.push(mobilityOptionButton);
 }
 
-// user gender
-let showGame = false;
-let userImage = [];
-userImage.push(sheGenderImage);
-userImage.push(theyGenderImage);
-userImage.push(heGenderImage);
-let users = [];
-for (let i = 0; i < 3; i++) {
-  let user = new User(
-    windowWidth / 2 - 525 + 400 * i,
-    windowHeight / 2 - 300,
-    300,
-    650,
-    userImage[i]
-  );
-  users.push(user);
-}
-
-// make hitBoxes scaleable
-for (let arrayObject of hitBoxArray) {
-  arrayObject.x *= scaleX;
-  arrayObject.y *= scaleY;
-  arrayObject.width *= scaleX;
-  arrayObject.height *= scaleY;
-}
-
-// statusBar
-let statusBarArray = [];
-let bar = new StatusBar(
-  windowWidth / 2,
-  35,
-  750,
-  70,
-  barBG,
-  scaleX,
-  scaleY,
-  exclamationMark,
-  sun,
-  calender,
-  clock
-);
-statusBarArray.push(bar);
-
-// make status Bar scaleable
-for (let arrayObject of statusBarArray) {
-  arrayObject.y *= scaleY;
-  arrayObject.width *= scaleX;
-  arrayObject.height *= scaleY;
-}
-
-// to Do list
-let toDoList = new ToDo(
-  windowWidth / 2,
-  windowHeight / 2,
-  745 * scaleX,
-  393 * scaleY,
-  scaleX,
-  scaleY,
-  toDoBG,
-  close,
-  toDoBG,
-  toDoBoxDone
-);
-
-// faces
-let facesArray = [];
-let imageFace;
-let chosenGenderImage = sheImage;
-
-for (let i = 0; i < 5; i++) {
-  if (i === 0) {
-    imageFace = workerOneImage;
-  }
-  if (i === 1) {
-    imageFace = workerTwoImage;
-  }
-  if (i === 2) {
-    imageFace = chosenGenderImage;
-  }
-  if (i === 3) {
-    imageFace = workerThreeImage;
-  }
-  if (i === 4) {
-    imageFace = workerFourImage;
-  }
-  facesArray[i] = new Draggable(490 + i * 65, 5, 50, 50, imageFace);
-}
-
-for (let i = 0; i < facesArray.length; i++) {
-  facesArray[i].setPreferences();
-}
-// make faces scaleable
-for (let arrayObject of facesArray) {
-  arrayObject.x *= scaleX;
-  arrayObject.y *= scaleY;
-  arrayObject.width *= scaleX;
-  arrayObject.height *= scaleY;
-}
-
-// initiate time
-let timer = new BasicObjectText(
-  bar.x + 222 * scaleX,
-  bar.y - 17 * scaleY,
-  105 * scaleX,
-  30 * scaleY,
-  10,
-  "rgba(0,0,0, 0)",
-  time,
-  27 * scaleX
-);
-timer.setTextColor("white");
-timer.setFont(rokkittFont);
-
-let day = new BasicObjectText(
-  bar.x + 140 * scaleX,
-  bar.y - 17 * scaleY,
-  54 * scaleX,
-  30 * scaleY,
-  10,
-  "rgba(0,0,0, 0)",
-  timerDay,
-  27 * scaleX
-);
-day.setTextColor("white");
-day.setFont(rokkittFont);
-
+// initiate assignment array because it needs to be used in newDay()
 let assignmentArray = [];
 
 // set Time
@@ -346,7 +415,6 @@ function setTime() {
 
   function newDay() {
     // check productivity of the day
-    // funktioniert noch nicht!!
     for (let i = 0; i < facesArray.length; i++) {
       facesArray[i].checkProductivity();
     }
@@ -394,15 +462,6 @@ function setTime() {
   return time;
 }
 
-// intermediate result
-let resultI = new BasicObjectImage(
-  windowWidth / 2,
-  windowHeight / 2,
-  400,
-  300,
-  toDoBG
-);
-
 let buttonStartTimeAgain = new BasicObjectText(
   windowWidth / 2 + 50,
   windowHeight / 2 + 50,
@@ -415,7 +474,7 @@ let buttonStartTimeAgain = new BasicObjectText(
 );
 
 function showMobilityOptionsDialogue(i) {
-  //Anzeigen von Auswahlbuttons und SVG Hover
+  //Show choose Buttons ans SVG hover
   // collisions[i][1] = 0 = Messe
   // collisions[i][1] = 1 = Kunde1
   // collisions[i][1] = 2 = Kunde 2
@@ -501,18 +560,21 @@ function calculateWorkingHours(companyIndex, mobilityOptionObject, faceIndex) {
 let enviromentValue = 0;
 let maximalCosts = 0;
 
+let hideUserSelection = false;
+
 // ==== DRAW ====
 function draw() {
   //User selection display
   fill(186, 226, 227);
   rect(0, 0, windowWidth, windowHeight);
 
-  for (let i = 0; i < 3; i++) {
-    if (users[i].userSelection) {
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].userSelection && !hideUserSelection) {
       users[i].display();
     } //boolean to make it disappear after selecting one
     if (!users[i].userSelection) {
       users[i].userSelection = false;
+      hideUserSelection = true;
       showGame = true;
     }
   }
@@ -690,8 +752,8 @@ let plane = document.getElementById("plane");
 
 function showSVG(j) {
   //ACCESSING ALL ELEMENTS OF SAME CLASS IN HTML
-  var elements = document.getElementsByClassName("svg");
-  for (var i = 0; i < elements.length; i++) {
+  let elements = document.getElementsByClassName("svg");
+  for (let i = 0; i < elements.length; i++) {
     elements[i].style.display = "block";
   }
 
@@ -717,8 +779,8 @@ window.showSVG = showSVG;
 
 function hideSVG() {
   //ACCESSING ALL ELEMENTS OF SAME CLASS IN HTML
-  var elements = document.getElementsByClassName("svg");
-  for (var i = 0; i < elements.length; i++) {
+  let elements = document.getElementsByClassName("svg");
+  for (let i = 0; i < elements.length; i++) {
     elements[i].style.display = "none";
   }
   bus.style.display = "none";
