@@ -54,6 +54,8 @@ let close;
 let toDoBox;
 let toDoBoxDone;
 
+let windradImage;
+
 function preload() {
   // load font
   rokkittFont = loadFont("./assets/Rokkitt-Bold.ttf");
@@ -84,6 +86,8 @@ function preload() {
   close = loadImage("./assets/close.png");
   toDoBox = loadImage("./assets/toDo.png");
   toDoBoxDone = loadImage("./assets/toDo_done.png");
+
+  windradImage = loadImage("./assets/windrad.svg");
 }
 window.preload = preload;
 
