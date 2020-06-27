@@ -8,14 +8,14 @@ export default class MobilityOption extends BasicObjectText {
     height,
     cost,
     velocity,
-    enviromentalInfluence,
+    environmentalInfluence,
     titlemobi
   ) {
     super(x, y, width, height);
     this.cost = cost;
     this.velocity = velocity;
 
-    this.enviromentalInfluence = enviromentalInfluence;
+    this.environmentalInfluence = environmentalInfluence;
 
     // this.satisfactionInfluence = satisfactionInfluence;
     this.hidden = true;
