@@ -27,6 +27,7 @@ let productivityOfDay = 0;
 let productivityPerson = 0;
 let productivityWhole = 0;
 let textProductivity;
+let environmentValueKG = 0;
 
 // load font
 let rokkittFont;
@@ -436,55 +437,71 @@ function setTime() {
         productivityOfDay =
           parseInt(productivityOfDay) + parseInt(productivityPerson);
       }
+      resetWorkerForNewDay(i);
     }
 
     productivityOfDay = productivityOfDay / 5;
     productivityWhole += productivityOfDay;
 
-    if (productivityOfDay <= 20) {
-      textProductivity =
-        "Deine Mitarbeiter sind heute nicht produktiv gewesen. \nWas kannst du ändern, um die Produktivität morgen zu steigern?";
+    if (timerDay <= 2) {
+      if (productivityOfDay <= 20) {
+        textProductivity =
+          "Deine Mitarbeiter sind heute nicht produktiv gewesen. \nWas kannst du ändern, um die Produktivität morgen zu steigern?";
+      }
+
+      if (productivityOfDay > 20 && productivityOfDay <= 40) {
+        textProductivity =
+          "Deine Mitarbeiter sind heute eher nicht produktiv gewesen. \nWas kannst du ändern, um die Produktivität morgen zu steigern?";
+      }
+
+      if (productivityOfDay > 40 && productivityOfDay <= 60) {
+        textProductivity =
+          "Deine Mitarbeiter sind recht produktiv gewesen! \nAber kannst du eventuell noch etwas ändern, um die Produktivität morgen weiter zu steigern?";
+      }
+
+      if (productivityOfDay > 60 && productivityOfDay <= 80) {
+        textProductivity =
+          "Sehr gut, deine Mitarbeiter sind sehr produktiv gewesen! \nAber ein bisschen Luft nach oben hat dein Unternehmen noch.";
+      }
+
+      if (productivityOfDay > 80 && productivityOfDay <= 100) {
+        textProductivity =
+          "Perfekt, produktiver hätte dein Unternehmen nicht arbeiten können!";
+      }
+
+      evaluateProductivity = new BasicObjectText(
+        windowWidth / 2,
+        windowHeight / 2,
+        200,
+        50,
+        20,
+        "rgba(0,0,0,0)",
+        textProductivity,
+        20
+      );
+
+      // load new assignments for next day
+      assignmentArray = [];
+      loadStrings(
+        "./assets/" + timerDay + "_day_assignment.txt",
+        updateAssignment
+      );
     }
 
-    if (productivityOfDay > 20 && productivityOfDay <= 40) {
-      textProductivity =
-        "Deine Mitarbeiter sind heute eher nicht produktiv gewesen. \nWas kannst du ändern, um die Produktivität morgen zu steigern?";
+    if (timerDay === 4) {
+      environmentValueKG = environmentValue / 1000;
+
+      productivityWhole = productivityWhole / 3;
     }
+  }
 
-    if (productivityOfDay > 40 && productivityOfDay <= 60) {
-      textProductivity =
-        "Deine Mitarbeiter sind recht produktiv gewesen! \n Aber kannst du eventuell noch etwas ändern, um die Produktivität morgen weiter zu steigern?";
-    }
-
-    if (productivityOfDay > 60 && productivityOfDay <= 80) {
-      textProductivity =
-        "Sehr gut, deine Mitarbeiter sind sehr produktiv gewesen! \n Aber ein bisschen Luft nach oben hat dein Unternehmen noch.";
-    }
-
-    if (productivityOfDay > 80 && productivityOfDay <= 100) {
-      textProductivity =
-        "Perfekt, produktiver hätte dein Unternehmen nicht arbeiten können!";
-    }
-
-    evaluateProductivity = new BasicObjectText(
-      windowWidth / 2,
-      windowHeight / 2,
-      200,
-      50,
-      20,
-      "rgba(0,0,0,0)",
-      textProductivity,
-      20
-    );
-
-    // check environmental value
-
-    // load new assignments for next day
-    assignmentArray = [];
-    loadStrings(
-      "./assets/" + timerDay + "_day_assignment.txt",
-      updateAssignment
-    );
+  function resetWorkerForNewDay(i) {
+    facesArray[i].x = 490 * scaleX + i * 65 * scaleX;
+    facesArray[i].y = 5 * scaleY;
+    facesArray[i].workingHours = 0;
+    facesArray[i].totalActiveTime = 0;
+    facesArray[i].isAvailable = true;
+    facesArray[i].productivity = 0;
   }
 
   // write/update assignment
@@ -521,6 +538,17 @@ function setTime() {
   }
 
   return time;
+}
+
+function makeEnvironmentalValueVisible() {
+  if (environmentValue > 200000) {
+    fill("rgba(0, 0, 0, 0.2)");
+    rect(0, 0, windowWidth, windowHeight);
+  }
+  if (environmentValue > 1000000) {
+    fill("rgba(0, 0, 0, 0.5)");
+    rect(0, 0, windowWidth, windowHeight);
+  }
 }
 
 let buttonStartTimeAgain = new BasicObjectText(
@@ -642,6 +670,7 @@ function draw() {
 
   if (showGame) {
     mapClass.display();
+    makeEnvironmentalValueVisible();
 
     // chose gender Image
     if (users[0].gender) {
