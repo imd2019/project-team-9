@@ -1,6 +1,9 @@
-    5; 7:00 Besprechung Firma; 3 3 Arbeiter
-    1; 9:00 Termin Kunde 1; 6 1 Arbeiter
-    3; 11:00 Konferenz Tochterfirma; 2 1 Arbeiter
-    2; 13:00 Termin Kunde 2; 3 1 Arbeiter
-    0; 14:00 Messebesuch; 2 1 Arbeiter
-    5; 15:00 Projektarbeit Firma; 3 2 Arbeiter 
+    5;  Besprechung Firma; 3 
+    5;  Besprechung Firma; 3 
+    5;  Besprechung Firma; 3 
+    1;  Termin Kunde 1; 6 
+    3;  Konferenz Tochterfirma; 2 
+    2;  Termin Kunde 2; 3 
+    0;  Messebesuch; 2 
+    5;  Projektarbeit Firma; 3 
+    5;  Projektarbeit Firma; 3 

@@ -645,7 +645,6 @@ function calculateWorkingHours(companyIndex, mobilityOptionObject, faceIndex) {
   }
 }
 
-// environment value
 let environmentValue = 0;
 let maximalCosts = 0;
 

@@ -1,8 +1,10 @@
-    5; 7:00 Telefonat Firma; 2 1 Arbeiter
-    5; 8:00 Besprechung Firma; 3 2 Arbeiter
-    1; 9:00 Termin Kunde 1; 4 1 Arbeiter
-    0; 12:00 Messebesuch; 4 2 Arbeiter
-    5; 13:00 Telefonat Firma; 1 1 Arbeiter
-    3; 13:00 Präsentation Tochterfirma; 2 1 Arbeiter
-    2; 16:00 Termin Kunde 2; 2 1 Arbeiter 
-    5; 16:00 Interview Firma; 2 1 Arbeiter
+    5;  Telefonat Firma; 2 
+    5;  Besprechung Firma; 3 
+    5;  Besprechung Firma; 3 
+    1;  Termin Kunde 1; 4 
+    0;  Messebesuch; 4 
+    0;  Messebesuch; 4 
+    5;  Telefonat Firma; 1 
+    3;  Präsentation Tochterfirma; 2 
+    2;  Termin Kunde 2; 2
+    5;  Interview Firma; 2
