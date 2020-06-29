@@ -16,7 +16,7 @@ export default class BasicObjectText {
     this.height = height;
     this.radius = radius;
     this.rectColor = rectColor;
-    this.textColor = "black";
+    this.textColor = "white";
     this.title = title;
     this.sizeText = sizeText;
     this.image = image;

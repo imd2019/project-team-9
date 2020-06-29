@@ -67,8 +67,6 @@ export default class Draggable extends BasicObjectImage {
   checkProductivity() {
     this.productivity =
       (parseFloat(this.totalActiveTime) / parseFloat(this.workingHours)) * 100;
-
-    console.log(parseInt(this.productivity));
   }
 
   getProductivity() {

@@ -23,6 +23,11 @@ let showIntermediateResult = false;
 let assignmentText = "";
 let assignmentsAmount = 5;
 let firstDay = true;
+let productivityOfDay = 0;
+let productivityPerson = 0;
+let productivityWhole = 0;
+let textProductivity;
+let environmentValueKG = 0;
 
 // load font
 let rokkittFont;
@@ -118,6 +123,7 @@ let chosenGenderImage = sheImage;
 
 // intermediate result
 let resultI;
+let evaluateProductivity;
 
 let gameStarted;
 
@@ -245,10 +251,10 @@ function gameSetup() {
 
   // intermediate result
   resultI = new BasicObjectImage(
-    windowWidth / 2,
-    windowHeight / 2,
-    400,
-    300,
+    windowWidth / 2 - 400 * scaleX,
+    windowHeight / 2 - 200 * scaleY,
+    800 * scaleX,
+    400 * scaleY,
     toDoBG
   );
 
@@ -345,7 +351,7 @@ let mobilityOptions = [];
 let mobilityOptionButton;
 let cost = [0.5, 0.24, 0.3, 0.53, 0];
 let velocity = [120, 150, 1000, 80, 0];
-let enviromentalInfluence = [147, 32, 230, 80, 0];
+let environmentalInfluence = [147, 32, 230, 80, 0];
 let titlemobi = ["Auto", "Zug", "Flugzeug", "Bus", "Call"];
 
 // mobilityOptions[0] = Auto
@@ -362,7 +368,7 @@ for (let i = 0; i < 5; i++) {
       500,
       cost[i],
       velocity[i],
-      enviromentalInfluence[i],
+      environmentalInfluence[i],
       titlemobi[i]
     );
   }
@@ -375,7 +381,7 @@ for (let i = 0; i < 5; i++) {
       500,
       cost[i],
       velocity[i],
-      enviromentalInfluence[i],
+      environmentalInfluence[i],
       titlemobi[i]
     );
   }
@@ -391,7 +397,11 @@ function setTime() {
   // initiate first Day
 
   if (firstDay) {
-    newDay();
+    assignmentArray = [];
+    loadStrings(
+      "./assets/" + timerDay + "_day_assignment.txt",
+      updateAssignment
+    );
     firstDay = false;
   }
 
@@ -419,15 +429,79 @@ function setTime() {
 
   function newDay() {
     // check productivity of the day
+    productivityOfDay = 0;
     for (let i = 0; i < facesArray.length; i++) {
       facesArray[i].checkProductivity();
+      productivityPerson = facesArray[i].getProductivity();
+      if (productivityPerson > 0) {
+        productivityOfDay =
+          parseInt(productivityOfDay) + parseInt(productivityPerson);
+      }
+      resetWorkerForNewDay(i);
     }
 
-    assignmentArray = [];
-    loadStrings(
-      "./assets/" + timerDay + "_day_assignment.txt",
-      updateAssignment
-    );
+    productivityOfDay = productivityOfDay / 5;
+    productivityWhole += productivityOfDay;
+
+    if (timerDay <= 2) {
+      if (productivityOfDay <= 20) {
+        textProductivity =
+          "Deine Mitarbeiter sind heute nicht produktiv gewesen. \nWas kannst du ändern, um die Produktivität morgen zu steigern?";
+      }
+
+      if (productivityOfDay > 20 && productivityOfDay <= 40) {
+        textProductivity =
+          "Deine Mitarbeiter sind heute eher nicht produktiv gewesen. \nWas kannst du ändern, um die Produktivität morgen zu steigern?";
+      }
+
+      if (productivityOfDay > 40 && productivityOfDay <= 60) {
+        textProductivity =
+          "Deine Mitarbeiter sind recht produktiv gewesen! \nAber kannst du eventuell noch etwas ändern, um die Produktivität morgen weiter zu steigern?";
+      }
+
+      if (productivityOfDay > 60 && productivityOfDay <= 80) {
+        textProductivity =
+          "Sehr gut, deine Mitarbeiter sind sehr produktiv gewesen! \nAber ein bisschen Luft nach oben hat dein Unternehmen noch.";
+      }
+
+      if (productivityOfDay > 80 && productivityOfDay <= 100) {
+        textProductivity =
+          "Perfekt, produktiver hätte dein Unternehmen nicht arbeiten können!";
+      }
+
+      evaluateProductivity = new BasicObjectText(
+        windowWidth / 2,
+        windowHeight / 2,
+        200,
+        50,
+        20,
+        "rgba(0,0,0,0)",
+        textProductivity,
+        20
+      );
+
+      // load new assignments for next day
+      assignmentArray = [];
+      loadStrings(
+        "./assets/" + timerDay + "_day_assignment.txt",
+        updateAssignment
+      );
+    }
+
+    if (timerDay === 4) {
+      environmentValueKG = environmentValue / 1000;
+
+      productivityWhole = productivityWhole / 3;
+    }
+  }
+
+  function resetWorkerForNewDay(i) {
+    facesArray[i].x = 490 * scaleX + i * 65 * scaleX;
+    facesArray[i].y = 5 * scaleY;
+    facesArray[i].workingHours = 0;
+    facesArray[i].totalActiveTime = 0;
+    facesArray[i].isAvailable = true;
+    facesArray[i].productivity = 0;
   }
 
   // write/update assignment
@@ -466,15 +540,26 @@ function setTime() {
   return time;
 }
 
+function makeEnvironmentalValueVisible() {
+  if (environmentValue > 200000) {
+    fill("rgba(0, 0, 0, 0.2)");
+    rect(0, 0, windowWidth, windowHeight);
+  }
+  if (environmentValue > 1000000) {
+    fill("rgba(0, 0, 0, 0.5)");
+    rect(0, 0, windowWidth, windowHeight);
+  }
+}
+
 let buttonStartTimeAgain = new BasicObjectText(
-  windowWidth / 2 + 50,
-  windowHeight / 2 + 50,
-  100,
-  50,
+  windowWidth / 2 - 100 * scaleX,
+  windowHeight / 2 + 100 * scaleY,
+  200 * scaleX,
+  50 * scaleY,
   10,
-  "pink",
-  "Start Time again",
-  30
+  "#E83A5A",
+  "start new day",
+  20
 );
 
 function showMobilityOptionsDialogue(i) {
@@ -524,9 +609,9 @@ function calculateDuration(companyIndex, faceIndex, mobilityOptionObject) {
 
 function calculateInfluenceAndCosts(companyIndex, mobilityOptionObject) {
   if (mobilityOptionObject.selected) {
-    enviromentValue +=
+    environmentValue +=
       hitBoxArray[companyIndex].trackLength *
-      mobilityOptionObject.enviromentalInfluence;
+      mobilityOptionObject.environmentalInfluence;
 
     maximalCosts +=
       hitBoxArray[companyIndex].trackLength * mobilityOptionObject.cost;
@@ -560,8 +645,8 @@ function calculateWorkingHours(companyIndex, mobilityOptionObject, faceIndex) {
   }
 }
 
-// enviroment value
-let enviromentValue = 0;
+// environment value
+let environmentValue = 0;
 let maximalCosts = 0;
 
 let hideUserSelection = false;
@@ -585,6 +670,7 @@ function draw() {
 
   if (showGame) {
     mapClass.display();
+    makeEnvironmentalValueVisible();
 
     // chose gender Image
     if (users[0].gender) {
@@ -618,7 +704,7 @@ function draw() {
       // mobilityOptions[i].calculateValues(
       //   hitBoxArray,
       //   mobilityOptions,
-      //   enviromentValue,
+      //   environmentValue,
       //   maximalCosts
       // );
     }
@@ -679,6 +765,7 @@ function draw() {
   if (showIntermediateResult) {
     resultI.display();
     buttonStartTimeAgain.display();
+    evaluateProductivity.display();
   }
 }
 
