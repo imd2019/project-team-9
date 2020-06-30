@@ -28,6 +28,10 @@ let productivityPerson = 0;
 let productivityWhole = 0;
 let textProductivity;
 let environmentValueKG = 0;
+let textEnvironment;
+
+let indexOfChosenMobilityOption;
+let startCoolDown = false;
 
 // load font
 let rokkittFont;
@@ -124,8 +128,9 @@ let chosenGenderImage = sheImage;
 // intermediate result
 let resultI;
 let evaluateProductivity;
+let evaluateEnvironment;
 
-let gameStarted;
+// let gameStarted;
 
 function gameSetup() {
   mapClass = new BasicObjectImage(0, 0, 1536 * scaleX, 750 * scaleY, mapImage);
@@ -258,9 +263,8 @@ function gameSetup() {
     toDoBG
   );
 
-  gameStarted = true;
+  // gameStarted = true;
 }
-
 window.gameSetup = gameSetup;
 
 // hit Boxes
@@ -419,7 +423,7 @@ function setTime() {
     hourTimer++;
   }
 
-  if (hourTimer === 7) {
+  if (hourTimer === 20) {
     showIntermediateResult = true;
     minuteTimer = 0;
     hourTimer = 6;
@@ -443,7 +447,7 @@ function setTime() {
     productivityOfDay = productivityOfDay / 5;
     productivityWhole += productivityOfDay;
 
-    if (timerDay <= 2) {
+    if (timerDay <= 3) {
       if (productivityOfDay <= 20) {
         textProductivity =
           "Deine Mitarbeiter sind heute nicht produktiv gewesen. \nWas kannst du ändern, um die Produktivität morgen zu steigern?";
@@ -490,8 +494,77 @@ function setTime() {
 
     if (timerDay === 4) {
       environmentValueKG = environmentValue / 1000;
-
       productivityWhole = productivityWhole / 3;
+      productivityWhole = productivityWhole / 5;
+
+      // evaluation of environmental value
+      if (environmentValueKG <= 300) {
+        textEnvironment =
+          "Du hast nur " +
+          environmentValueKG +
+          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen sehr wenig, du hast darauf geachtet, die Umwelt nicht zu sehr zu belasten, das hilft nicht nur der Umwelt sondern auch deinem Image. ";
+      }
+
+      if (environmentValueKG > 300 && environmentValueKG <= 800) {
+        textEnvironment =
+          "Du hast " +
+          environmentValueKG +
+          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen relativ wenig! Du hast versucht darauf zu achten, die Umwelt zu schonen, aber vielleicht kannst du versuchen, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen. Das könnte auch dem Image deiner Firma helfen!";
+      }
+
+      if (environmentValueKG > 800 && environmentValueKG <= 1500) {
+        textEnvironment =
+          "Du hast " +
+          environmentValueKG +
+          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen relativ viel! Versuche, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen, denn das hilft nicht nur der Uwmelt, sondern auch dem Image deiner Firma!";
+      }
+
+      evaluateEnvironment = new BasicObjectText(
+        windowWidth / 2,
+        windowHeight / 2,
+        200,
+        50,
+        20,
+        "rgba(0,0,0,0)",
+        textEnvironment,
+        20
+      );
+      // evaluation of whole productivity
+      if (productivityWhole <= 20) {
+        textProductivity =
+          "Deine Mitarbeiter sind heute nicht produktiv gewesen. \nWas kannst du ändern, um die Produktivität morgen zu steigern?";
+      }
+
+      if (productivityWhole > 20 && productivityWhole <= 40) {
+        textProductivity =
+          "Deine Mitarbeiter sind heute eher nicht produktiv gewesen. \nWas kannst du ändern, um die Produktivität morgen zu steigern?";
+      }
+
+      if (productivityWhole > 40 && productivityWhole <= 60) {
+        textProductivity =
+          "Deine Mitarbeiter sind recht produktiv gewesen! \nAber kannst du eventuell noch etwas ändern, um die Produktivität morgen weiter zu steigern?";
+      }
+
+      if (productivityWhole > 60 && productivityWhole <= 80) {
+        textProductivity =
+          "Sehr gut, deine Mitarbeiter sind sehr produktiv gewesen! \nAber ein bisschen Luft nach oben hat dein Unternehmen noch.";
+      }
+
+      if (productivityWhole > 80 && productivityWhole <= 100) {
+        textProductivity =
+          "Perfekt, produktiver hätte dein Unternehmen nicht arbeiten können!";
+      }
+
+      evaluateProductivity = new BasicObjectText(
+        windowWidth / 2,
+        windowHeight / 2,
+        200,
+        50,
+        20,
+        "rgba(0,0,0,0)",
+        textProductivity,
+        20
+      );
     }
   }
 
@@ -645,6 +718,7 @@ function calculateWorkingHours(companyIndex, mobilityOptionObject, faceIndex) {
   }
 }
 
+// environment value
 let environmentValue = 0;
 let maximalCosts = 0;
 
@@ -723,6 +797,14 @@ function draw() {
               showMobilityOptions = false;
             }
             //then check if an option was chosen if yes, close Dialogue in hideMobilityDialogue, calculate duration, costs, environmental value an check assignment, can be found in mouseClicked
+
+            // cool Down of workers
+            if (startCoolDown) {
+              facesArray[collisions[i][0]].coolDown(
+                assignmentArray[j].getDurationOfAssignment(),
+                mobilityOptions[indexOfChosenMobilityOption].duration
+              );
+            }
           }
         }
       }
@@ -808,6 +890,9 @@ function mouseClicked() {
             mobilityOptions[i],
             collisions[j][0]
           );
+
+          indexOfChosenMobilityOption = i;
+          startCoolDown = true;
         }
       }
     }

@@ -11,10 +11,14 @@ export default class Draggable extends BasicObjectImage {
     this.totalActiveTime = 0;
     this.isDragged = false;
     this.alreadyChecked = false;
+    this.hoursUnavailable = 0;
+    this.setHoursUnavailable = false;
+    this.timerCoolDown = 0;
+    this.timerCoolDownFrames = 0;
   }
 
   clicked() {
-    if (mouseIsPressed) {
+    if (mouseIsPressed && this.isAvailable) {
       this.x = mouseX - this.width / 2;
       this.y = mouseY - this.height / 2;
       this.isDragged = true;
@@ -79,5 +83,31 @@ export default class Draggable extends BasicObjectImage {
 
   setGenderImage(genderImage) {
     this.image = genderImage;
+  }
+
+  // cool down of workers
+  coolDown(timeNotAvailable, timeMoving) {
+    if (!this.setHoursUnavailable) {
+      console.log(timeNotAvailable);
+      console.log(timeMoving);
+      this.hoursUnavailable =
+        parseFloat(timeNotAvailable) + parseFloat(timeMoving);
+      console.log(this.hoursUnavailable);
+      this.setHoursUnavailable = true;
+    }
+    this.timerCoolDownFrames++;
+    if (this.timerCoolDownFrames === 30) {
+      this.timerCoolDown++;
+      this.timerCoolDownFrames = 0;
+    }
+    if (this.timerCoolDown === 59) {
+      this.hoursUnavailable--;
+      this.timerCoolDown = 0;
+      if (this.hoursUnavailable <= 0) {
+        this.isAvailable = true;
+        this.setHoursUnavailable = false;
+        console.log(this.isAvailable);
+      }
+    }
   }
 }
