@@ -33,4 +33,8 @@ export default class BasicObjectImage {
       this.clicked();
     }
   }
+
+  setGenderImage(genderImage) {
+    this.image = genderImage;
+  }
 }

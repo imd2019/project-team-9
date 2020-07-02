@@ -20,7 +20,7 @@ export default class BasicObjectText {
     this.title = title;
     this.sizeText = sizeText;
     this.image = image;
-    this.textFont = textFont;
+    this.textFont = "Arial";
     this.locationSelection = false;
     this.trackLength = trackLength;
   }

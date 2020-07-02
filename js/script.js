@@ -19,7 +19,7 @@ let hourTimer = 6;
 let minuteTimer = 0;
 let timerDay = 1;
 let time = 0;
-let showIntermediateResult = false;
+let showResult = false;
 let assignmentText = "";
 let assignmentsAmount = 5;
 let firstDay = true;
@@ -39,6 +39,7 @@ let segeoUiFont;
 
 // load images
 let mapImage;
+let evaluationBG;
 
 let sheImage;
 let heImage;
@@ -51,6 +52,15 @@ let workerOneImage;
 let workerTwoImage;
 let workerThreeImage;
 let workerFourImage;
+
+let sheImageBG;
+let heImageBG;
+let theyImageBG;
+let workerOneImageBG;
+let workerTwoImageBG;
+let workerThreeImageBG;
+let workerFourImageBG;
+let chosenGenderImageBG;
 
 let barBG;
 let exclamationMark;
@@ -72,6 +82,7 @@ function preload() {
 
   // load images
   mapImage = loadImage("./assets/Map 2.png");
+  evaluationBG = loadImage("./assets/mobi_evaluation.png");
 
   sheImage = loadImage("./assets/she.png");
   heImage = loadImage("./assets/he.png");
@@ -84,6 +95,15 @@ function preload() {
   workerTwoImage = loadImage("./assets/worker_two.png");
   workerThreeImage = loadImage("./assets/worker_three.png");
   workerFourImage = loadImage("./assets/worker_four.png");
+
+  // background images
+  sheImageBG = loadImage("./assets/she_bg.png");
+  heImageBG = loadImage("./assets/he_bg.png");
+  theyImageBG = loadImage("./assets/they_bg.png");
+  workerOneImageBG = loadImage("./assets/worker_one_bg.png");
+  workerTwoImageBG = loadImage("./assets/worker_two_bg.png");
+  workerThreeImageBG = loadImage("./assets/worker_three_bg.png");
+  workerFourImageBG = loadImage("./assets/worker_four_bg.png");
 
   barBG = loadImage("./assets/bar.png");
   exclamationMark = loadImage("./assets/exclamationMark.png");
@@ -122,13 +142,17 @@ let toDoList;
 
 // faces
 let facesArray = [];
+let facesArrayBG = [];
 let imageFace;
+let imageFaceBG;
 let chosenGenderImage = sheImage;
 
-// intermediate result
+// result
 let resultI;
 let evaluateProductivity;
 let evaluateEnvironment;
+let buttonStartTimeAgain;
+let buttonReload;
 
 // let gameStarted;
 
@@ -254,14 +278,76 @@ function gameSetup() {
     arrayObject.height *= scaleY;
   }
 
+  // faces Background
+  for (let i = 0; i < 5; i++) {
+    if (i === 0) {
+      imageFaceBG = workerOneImageBG;
+    }
+    if (i === 1) {
+      imageFaceBG = workerTwoImageBG;
+    }
+    if (i === 2) {
+      imageFaceBG = chosenGenderImage;
+    }
+    if (i === 3) {
+      imageFaceBG = workerThreeImageBG;
+    }
+    if (i === 4) {
+      imageFaceBG = workerFourImageBG;
+    }
+    facesArrayBG[i] = new BasicObjectImage(
+      490 + i * 65,
+      5,
+      50,
+      50,
+      imageFaceBG
+    );
+  }
+
+  // make faces background scaleable
+  for (let arrayObject of facesArrayBG) {
+    arrayObject.x *= scaleX;
+    arrayObject.y *= scaleY;
+    arrayObject.width *= scaleX;
+    arrayObject.height *= scaleY;
+  }
+
   // intermediate result
   resultI = new BasicObjectImage(
-    windowWidth / 2 - 400 * scaleX,
-    windowHeight / 2 - 200 * scaleY,
-    800 * scaleX,
-    400 * scaleY,
-    toDoBG
+    0,
+    0,
+    1536 * scaleX,
+    750 * scaleY,
+    evaluationBG
   );
+
+  buttonStartTimeAgain = new BasicObjectText(
+    windowWidth / 2 - 150 * scaleX,
+    windowHeight / 2 - 100 * scaleY,
+    300 * scaleX,
+    50 * scaleY,
+    10,
+    "#E83A5A",
+    "Starte einen neuen Tag",
+    25 * scaleX,
+    0
+  );
+
+  buttonStartTimeAgain.setFont(segeoUiFont);
+
+  buttonReload = new BasicObjectText(
+    windowWidth / 2 - 150 * scaleX,
+    350 * scaleY,
+    300 * scaleX,
+    50 * scaleY,
+    10,
+    "#E83A5A",
+    "Starte ein neues Spiel",
+    25 * scaleX,
+    0
+  );
+
+  buttonReload.setFont(segeoUiFont);
 
   // gameStarted = true;
 }
@@ -409,22 +495,22 @@ function setTime() {
     firstDay = false;
   }
 
-  if (!showIntermediateResult) {
+  if (!showResult) {
     timerAll++;
   }
 
-  if (timerAll === 30) {
+  if (timerAll === 29) {
     minuteTimer++;
     timerAll = 0;
   }
-
-  if (minuteTimer === 59) {
+  // 59
+  if (minuteTimer === 5) {
     minuteTimer = 0;
     hourTimer++;
   }
 
-  if (hourTimer === 20) {
-    showIntermediateResult = true;
+  if (hourTimer === 7) {
+    showResult = true;
     minuteTimer = 0;
     hourTimer = 6;
     timerDay++;
@@ -474,15 +560,16 @@ function setTime() {
       }
 
       evaluateProductivity = new BasicObjectText(
-        windowWidth / 2,
-        windowHeight / 2,
+        windowWidth / 2 - 100,
+        150 * scaleY,
         200,
         50,
         20,
         "rgba(0,0,0,0)",
         textProductivity,
-        20
+        25 * scaleX
       );
+      evaluateProductivity.setFont(segeoUiFont);
 
       // load new assignments for next day
       assignmentArray = [];
@@ -502,33 +589,35 @@ function setTime() {
         textEnvironment =
           "Du hast nur " +
           environmentValueKG +
-          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen sehr wenig, du hast darauf geachtet, die Umwelt nicht zu sehr zu belasten, das hilft nicht nur der Umwelt sondern auch deinem Image. ";
+          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen sehr wenig, du hast darauf geachtet, die Umwelt nicht zu sehr zu belasten, \n das hilft nicht nur der Umwelt sondern auch deinem Image. ";
       }
 
       if (environmentValueKG > 300 && environmentValueKG <= 800) {
         textEnvironment =
           "Du hast " +
           environmentValueKG +
-          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen relativ wenig! Du hast versucht darauf zu achten, die Umwelt zu schonen, aber vielleicht kannst du versuchen, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen. Das könnte auch dem Image deiner Firma helfen!";
+          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen relativ wenig! \n Du hast versucht darauf zu achten, die Umwelt zu schonen, aber vielleicht kannst du versuchen, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen. Das könnte auch dem Image deiner Firma helfen!";
       }
 
       if (environmentValueKG > 800 && environmentValueKG <= 1500) {
         textEnvironment =
           "Du hast " +
           environmentValueKG +
-          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen relativ viel! Versuche, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen, denn das hilft nicht nur der Uwmelt, sondern auch dem Image deiner Firma!";
+          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen relativ viel! \n Versuche, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen, denn das hilft nicht nur der Uwmelt, sondern auch dem Image deiner Firma!";
       }
 
       evaluateEnvironment = new BasicObjectText(
-        windowWidth / 2,
-        windowHeight / 2,
+        windowWidth / 2 - 100,
+        200 * scaleY,
         200,
         50,
         20,
         "rgba(0,0,0,0)",
         textEnvironment,
-        20
+        25 * scaleX
       );
+      evaluateEnvironment.setFont(segeoUiFont);
+
       // evaluation of whole productivity
       if (productivityWhole <= 20) {
         textProductivity =
@@ -556,15 +645,16 @@ function setTime() {
       }
 
       evaluateProductivity = new BasicObjectText(
-        windowWidth / 2,
-        windowHeight / 2,
+        windowWidth / 2 - 100,
+        100 * scaleY,
         200,
         50,
         20,
         "rgba(0,0,0,0)",
         textProductivity,
-        20
+        25 * scaleX
       );
+      evaluateProductivity.setFont(segeoUiFont);
     }
   }
 
@@ -623,17 +713,6 @@ function makeEnvironmentalValueVisible() {
     rect(0, 0, windowWidth, windowHeight);
   }
 }
-
-let buttonStartTimeAgain = new BasicObjectText(
-  windowWidth / 2 - 100 * scaleX,
-  windowHeight / 2 + 100 * scaleY,
-  200 * scaleX,
-  50 * scaleY,
-  10,
-  "#E83A5A",
-  "start new day",
-  20
-);
 
 function showMobilityOptionsDialogue(i) {
   //Show choose Buttons ans SVG hover
@@ -697,7 +776,7 @@ function checkAssignment(companyIndex) {
   for (let i = 0; i < assignmentArray.length; i++) {
     if (companyIndex === parseInt(assignmentArray[i].getCompanyIndex())) {
       assignmentArray[i].setAssignmentDone();
-      break; // just one assignment can be comleted at the same time
+      break; // just one assignment can be completed at the same time
     }
   }
 }
@@ -748,15 +827,19 @@ function draw() {
     // chose gender Image
     if (users[0].gender) {
       chosenGenderImage = sheImage;
+      chosenGenderImageBG = sheImageBG;
     }
     if (users[1].gender) {
       chosenGenderImage = theyImage;
+      chosenGenderImageBG = theyImageBG;
     }
     if (users[2].gender) {
       chosenGenderImage = heImage;
+      chosenGenderImageBG = heImageBG;
     }
 
     facesArray[2].setGenderImage(chosenGenderImage);
+    facesArrayBG[2].setGenderImage(chosenGenderImageBG);
 
     bar.display();
 
@@ -774,12 +857,6 @@ function draw() {
 
     for (let i = 0; i < 5; i++) {
       mobilityOptions[i].display();
-      // mobilityOptions[i].calculateValues(
-      //   hitBoxArray,
-      //   mobilityOptions,
-      //   environmentValue,
-      //   maximalCosts
-      // );
     }
 
     // collision detection
@@ -797,22 +874,23 @@ function draw() {
               showMobilityOptions = false;
             }
             //then check if an option was chosen if yes, close Dialogue in hideMobilityDialogue, calculate duration, costs, environmental value an check assignment, can be found in mouseClicked
-
-            // cool Down of workers
-            if (startCoolDown) {
-              facesArray[collisions[i][0]].coolDown(
-                assignmentArray[j].getDurationOfAssignment(),
-                mobilityOptions[indexOfChosenMobilityOption].duration
-              );
-            }
           }
         }
       }
     }
 
+    // update Cool Down for all workers who are unavailable
+    for (let worker of facesArray) {
+      if (!worker.isAvailable) {
+        worker.coolDownUpdate();
+      }
+    }
+
     // faces
     for (let i = 0; i < facesArray.length; i++) {
+      facesArrayBG[i].display();
       facesArray[i].display();
+
       facesArray[i].mouseClicked();
     }
 
@@ -843,10 +921,16 @@ function draw() {
   }
 
   // show intermediate result
-  if (showIntermediateResult) {
+  if (showResult) {
     resultI.display();
-    buttonStartTimeAgain.display();
     evaluateProductivity.display();
+    if (timerDay <= 3) {
+      buttonStartTimeAgain.display();
+    }
+    if (timerDay === 4) {
+      buttonReload.display();
+      evaluateEnvironment.display();
+    }
   }
 }
 
@@ -891,8 +975,11 @@ function mouseClicked() {
             collisions[j][0]
           );
 
-          indexOfChosenMobilityOption = i;
-          startCoolDown = true;
+          // cool Down of workers
+          facesArray[collisions[j][0]].setCoolDown(
+            assignmentArray[j].getDurationOfAssignment(),
+            mobilityOptions[i].duration
+          );
         }
       }
     }
@@ -911,7 +998,14 @@ function mouseClicked() {
 
   // restart Time
   if (buttonStartTimeAgain.mouseClicked()) {
-    showIntermediateResult = false;
+    showResult = false;
+  }
+
+  // restart game
+  if (timerDay === 4) {
+    if (buttonReload.mouseClicked()) {
+      window.location.reload();
+    }
   }
 
   // hideSVG();

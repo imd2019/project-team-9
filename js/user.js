@@ -10,7 +10,8 @@ export default class User extends BasicObjectImage {
   }
 
   display() {
-    fill(0);
+    fill("rgba(0,0,0,0)");
+    noStroke();
 
     rect(this.x, this.y, this.width, this.height, this.gender);
     image(this.userImage, this.x, this.y, this.width, this.height);

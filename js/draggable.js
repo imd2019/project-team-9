@@ -12,9 +12,8 @@ export default class Draggable extends BasicObjectImage {
     this.isDragged = false;
     this.alreadyChecked = false;
     this.hoursUnavailable = 0;
-    this.setHoursUnavailable = false;
-    this.timerCoolDown = 0;
-    this.timerCoolDownFrames = 0;
+    this.defaultX = x;
+    this.defaultY = y;
   }
 
   clicked() {
@@ -47,11 +46,6 @@ export default class Draggable extends BasicObjectImage {
     if (this.workingHours > 10) {
       this.satisfaction -= 20;
     }
-
-    // hier kommt noch: wenn die mobility option die selbe wie letzes Mal ist, sinkt die satisfaction
-    // if(mobilityOptionDayBefore === mobilityoptionNow) {
-    //   this.satisfaction -= 20;
-    // }
 
     // hier kommt noch: wenn die mobilityOption den preferences entspricht, dann steigt die Zufriedenheit
   }
@@ -86,28 +80,20 @@ export default class Draggable extends BasicObjectImage {
   }
 
   // cool down of workers
-  coolDown(timeNotAvailable, timeMoving) {
-    if (!this.setHoursUnavailable) {
-      console.log(timeNotAvailable);
-      console.log(timeMoving);
-      this.hoursUnavailable =
-        parseFloat(timeNotAvailable) + parseFloat(timeMoving);
-      console.log(this.hoursUnavailable);
-      this.setHoursUnavailable = true;
-    }
-    this.timerCoolDownFrames++;
-    if (this.timerCoolDownFrames === 30) {
-      this.timerCoolDown++;
-      this.timerCoolDownFrames = 0;
-    }
-    if (this.timerCoolDown === 59) {
-      this.hoursUnavailable--;
-      this.timerCoolDown = 0;
-      if (this.hoursUnavailable <= 0) {
-        this.isAvailable = true;
-        this.setHoursUnavailable = false;
-        console.log(this.isAvailable);
-      }
+  setCoolDown(timeNotAvailable, timeMoving) {
+    this.hoursUnavailable =
+      parseFloat(timeNotAvailable) + parseFloat(timeMoving);
+    console.log(this.hoursUnavailable);
+    this.hoursUnavailable = this.hoursUnavailable * 60; // hours in minutes
+    this.hoursUnavailable = this.hoursUnavailable * 30; // minutes in seconds
+  }
+
+  coolDownUpdate() {
+    this.hoursUnavailable--;
+    if (this.hoursUnavailable <= 0) {
+      this.x = this.defaultX;
+      this.y = this.defaultY;
+      this.isAvailable = true;
     }
   }
 }
