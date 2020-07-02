@@ -4,7 +4,7 @@ import BasicObjectImage from "./basicObjectImage.js";
 import MobilityOption from "./mobilityOption.js";
 import Draggable from "./draggable.js";
 import CollisionDetection from "./collisionDetection.js";
-import User from "./User.js";
+import User from "./user.js";
 import StatusBar from "./statusBar.js";
 import ToDo from "./toDo.js";
 import Assignment from "./assignment.js";
