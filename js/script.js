@@ -81,7 +81,7 @@ function preload() {
   segeoUiFont = loadFont("./assets/segoeuisl.ttf");
 
   // load images
-  mapImage = loadImage("./assets/Map.png");
+  mapImage = loadImage("./assets/map.png");
   evaluationBG = loadImage("./assets/mobi_evaluation.png");
 
   sheImage = loadImage("./assets/she.png");
