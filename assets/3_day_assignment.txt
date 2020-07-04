@@ -1,0 +1,10 @@
+5;Telefonat Firma;2 
+5;Besprechung Firma;3 
+5;Besprechung Firma;3 
+1;Termin Kunde 1;4 
+0;Messebesuch;4 
+0;Messebesuch;4 
+5;Telefonat Firma;1 
+3;Präsentation Tochterfirma;2 
+2;Termin Kunde 2;2
+5;Interview Firma;2

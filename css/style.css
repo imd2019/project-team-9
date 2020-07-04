@@ -1,0 +1,54 @@
+body {
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+#bus {
+  transform: translate(62.9vw, 27vh);
+  position: absolute;
+  display: none;
+}
+#busclick {
+  transform: translate(62.9vw, 27vh);
+  position: absolute;
+  display: none;
+}
+
+#call {
+  transform: translate(62.9vw, 27vh);
+  position: absolute;
+  display: none;
+}
+
+#plane {
+  transform: translate(62.9vw, 27vh);
+  position: absolute;
+  display: none;
+}
+#planeclick {
+  transform: translate(62.9vw, 27vh);
+  position: absolute;
+  display: none;
+}
+#car {
+  transform: translate(20.7vw, 27vh);
+  position: absolute;
+  display: none;
+}
+
+#carclick {
+  transform: translate(20.7vw, 27vh);
+  position: absolute;
+  display: none;
+}
+#train {
+  transform: translate(41.8vw, 27vh);
+  position: absolute;
+  display: none;
+}
+#trainclick {
+  transform: translate(41.8vw, 27vh);
+  position: absolute;
+  display: none;
+}
