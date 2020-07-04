@@ -19,6 +19,8 @@ let hourTimer = 6;
 let minuteTimer = 0;
 let timerDay = 1;
 let time = 0;
+let clickAnimationTimer = 0;
+let clickTimer = false;
 let showResult = false;
 let assignmentText = "";
 let assignmentsAmount = 5;
@@ -797,6 +799,38 @@ function calculateWorkingHours(companyIndex, mobilityOptionObject, faceIndex) {
   }
 }
 
+function calculateMobilityOptions(i) {
+  for (let j = 0; j < collisions.length; j++) {
+    if (facesArray[collisions[j][0]].isAvailable) {
+      calculateDuration(collisions[j][1], collisions[j][0], mobilityOptions[i]);
+
+      calculateInfluenceAndCosts(collisions[j][1], mobilityOptions[i]);
+
+      checkAssignment(collisions[j][1]);
+
+      calculateWorkingHours(
+        collisions[j][1],
+        mobilityOptions[i],
+        collisions[j][0]
+      );
+
+      // cool Down of workers
+      facesArray[collisions[j][0]].setCoolDown(
+        assignmentArray[j].getDurationOfAssignment(),
+        mobilityOptions[i].duration
+      );
+    }
+  }
+}
+
+function checkClickAnimationTimer() {
+  clickAnimationTimer++;
+  if (clickAnimationTimer >= 180) {
+    hideMobilityOptionsDialogue();
+    clickTimer = false;
+  }
+}
+
 // environment value
 let environmentValue = 0;
 let maximalCosts = 0;
@@ -913,7 +947,13 @@ function draw() {
       }
     }
   }
+  if (clickTimer) {
+    checkClickAnimationTimer();
+  }
 
+  // console.log(clickTimer);
+  // console.log(clickAnimationTimer);
+  // console.log(mobilityOptions[3].selected);
   //RESETTING CONDITIONS FOR MOBILITY OPTION DISPLAY IF SOMETHING HAS BEEN SELECTED, ENABLING IT TO BE SHOWN AGAIN IF DRAGGED ON IT AGAIN OR SOMEWHERE ELSE
   if (!collisionDetectionMap.overlapping) {
     for (let i = 0; i < 5; i++) {
@@ -961,31 +1001,8 @@ function mouseClicked() {
       mobilityOptions[i].mouseClicked();
     }
     if (mobilityOptions[i].selected) {
-      for (let j = 0; j < collisions.length; j++) {
-        if (facesArray[collisions[j][0]].isAvailable) {
-          calculateDuration(
-            collisions[j][1],
-            collisions[j][0],
-            mobilityOptions[i]
-          );
-
-          calculateInfluenceAndCosts(collisions[j][1], mobilityOptions[i]);
-
-          checkAssignment(collisions[j][1]);
-
-          calculateWorkingHours(
-            collisions[j][1],
-            mobilityOptions[i],
-            collisions[j][0]
-          );
-
-          // cool Down of workers
-          facesArray[collisions[j][0]].setCoolDown(
-            assignmentArray[j].getDurationOfAssignment(),
-            mobilityOptions[i].duration
-          );
-        }
-      }
+      calculateMobilityOptions(i);
+      clickTimer = true;
     }
   }
 
@@ -1022,6 +1039,47 @@ window.draw = draw;
 let bus = document.getElementById("bus");
 let call = document.getElementById("call");
 let plane = document.getElementById("plane");
+let busclick = document.getElementById("busclick");
+
+let getContentDocument;
+call.addEventListener(
+  "load",
+  function () {
+    getContentDocument = call.contentDocument;
+    console.log(getContentDocument);
+    let callSVG = getContentDocument.getElementById("e44whtepflyh1");
+    callSVG.addEventListener("click", function () {
+      call.style.display = "none";
+      console.log("I hate SVGs");
+    });
+  },
+  false
+);
+
+// mobilityOptions[0] = Auto
+// mobilityOptions[1] = Zug
+// mobilityOptions[2] = Flugzeug
+// mobilityOptions[3] = Bus
+// mobilityOptions[4] = Call
+bus.addEventListener(
+  "load",
+  function () {
+    getContentDocument = bus.contentDocument;
+    console.log(getContentDocument);
+    let busSVG = getContentDocument.getElementById("eyil7nf7hqe1");
+    busSVG.addEventListener("click", function () {
+      bus.style.display = "none";
+
+      mobilityOptions[3].selected = true;
+
+      calculateMobilityOptions(3);
+      clickTimer = true;
+
+      busclick.style.display = "block";
+    });
+  },
+  false
+);
 
 function showSVG(j) {
   //ACCESSING ALL ELEMENTS OF SAME CLASS IN HTML

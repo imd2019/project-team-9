@@ -21,6 +21,11 @@ body {
   position: absolute;
   display: none;
 }
+#busclick {
+  transform: translate(60.5vw, 27vh);
+  position: absolute;
+  display: none;
+}
 
 #call {
   transform: translate(60.5vw, 27vh);

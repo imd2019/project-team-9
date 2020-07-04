@@ -33,7 +33,7 @@ export default class MobilityOption extends BasicObjectText {
       push();
 
       noStroke();
-      fill(105);
+      fill(222, 250, 251);
 
       rect(this.x, this.y, this.width, this.height, 10);
 
