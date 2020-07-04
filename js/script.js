@@ -87,9 +87,9 @@ function preload() {
   sheImage = loadImage("./assets/she.png");
   heImage = loadImage("./assets/he.png");
   theyImage = loadImage("./assets/they.png");
-  sheGenderImage = loadImage("./assets/she gender.png");
-  theyGenderImage = loadImage("./assets/they gender.png");
-  heGenderImage = loadImage("./assets/he gender.png");
+  sheGenderImage = loadImage("./assets/she_gender.png");
+  theyGenderImage = loadImage("./assets/they_gender.png");
+  heGenderImage = loadImage("./assets/he_gender.png");
 
   workerOneImage = loadImage("./assets/worker_one.png");
   workerTwoImage = loadImage("./assets/worker_two.png");
@@ -1100,6 +1100,7 @@ trainSVG.addEventListener("click", function () {
 
   trainclick.style.display = "block";
   trainclick.contentDocument.location.reload(true);
+  train.contentDocument.location.reload(true);
 });
 
 // plane.addEventListener(
@@ -1170,6 +1171,7 @@ carSVG.addEventListener("click", function () {
 
   carclick.style.display = "block";
   carclick.contentDocument.location.reload(true);
+  car.contentDocument.location.reload(true);
 });
 
 // bus.addEventListener(
@@ -1206,6 +1208,7 @@ busSVG.addEventListener("click", function () {
 
   busclick.style.display = "block";
   busclick.contentDocument.location.reload(true);
+  bus.contentDocument.location.reload(true);
 });
 
 function showSVG(j) {
@@ -1213,7 +1216,6 @@ function showSVG(j) {
   train.style.display = "block";
   if (collisions[j][1] === 5) {
     bus.style.display = "block";
-    bus.contentWindow.location.reload(true);
   }
 
   if (collisions[j][1] === 1) {
