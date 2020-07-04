@@ -14,10 +14,12 @@ export default class Draggable extends BasicObjectImage {
     this.hoursUnavailable = 0;
     this.defaultX = x;
     this.defaultY = y;
+    this.hideOptionForWorker = false;
   }
 
   clicked() {
     if (mouseIsPressed && this.isAvailable) {
+      this.hideOptionForWorker = false;
       this.x = mouseX - this.width / 2;
       this.y = mouseY - this.height / 2;
       this.isDragged = true;

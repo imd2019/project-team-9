@@ -504,12 +504,12 @@ function setTime() {
     timerAll = 0;
   }
   // 59
-  if (minuteTimer === 5) {
+  if (minuteTimer === 59) {
     minuteTimer = 0;
     hourTimer++;
   }
 
-  if (hourTimer === 7) {
+  if (hourTimer === 20) {
     showResult = true;
     minuteTimer = 0;
     hourTimer = 6;
@@ -869,9 +869,13 @@ function draw() {
             collisions[i][1] === parseInt(assignmentArray[j].getCompanyIndex())
           ) {
             //show MobilityOptionsDialogue if necessary
-            if (facesArray[collisions[i][0]].isAvailable) {
+            if (
+              facesArray[collisions[i][0]].isAvailable &&
+              !facesArray[collisions[i][0]].hideOptionForWorker
+            ) {
               showMobilityOptionsDialogue(i);
               showMobilityOptions = false;
+              facesArray[collisions[i][0]].hideOptionForWorker = true;
             }
             //then check if an option was chosen if yes, close Dialogue in hideMobilityDialogue, calculate duration, costs, environmental value an check assignment, can be found in mouseClicked
           }
