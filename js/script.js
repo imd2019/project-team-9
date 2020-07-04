@@ -164,10 +164,10 @@ function gameSetup() {
 
   for (let i = 0; i < 3; i++) {
     user = new User(
-      windowWidth / 2 - 525 + 400 * i,
-      windowHeight / 2 - 300,
-      300,
-      650,
+      windowWidth / 2 - 525 * scaleX + 400 * i * scaleX,
+      windowHeight / 2 - 300 * scaleY,
+      300 * scaleX,
+      650 * scaleY,
       userImage[i]
     );
     users.push(user);
@@ -450,10 +450,10 @@ let titlemobi = ["Auto", "Zug", "Flugzeug", "Bus", "Call"];
 for (let i = 0; i < 5; i++) {
   if (i <= 1) {
     mobilityOptionButton = new MobilityOption(
-      windowWidth / 2 - 500 + 350 * i,
-      windowHeight / 2 - 250,
-      300,
-      500,
+      windowWidth / 2 - 450 * scaleX + 325 * scaleX * i,
+      windowHeight / 2 - 200 * scaleY,
+      238 * scaleX,
+      400 * scaleY,
       cost[i],
       velocity[i],
       environmentalInfluence[i],
@@ -463,10 +463,10 @@ for (let i = 0; i < 5; i++) {
 
   if (i > 1) {
     mobilityOptionButton = new MobilityOption(
-      windowWidth / 2 + 200,
-      windowHeight / 2 - 250,
-      300,
-      500,
+      windowWidth / 2 + 200 * scaleX,
+      windowHeight / 2 - 200 * scaleY,
+      238 * scaleX,
+      400 * scaleY,
       cost[i],
       velocity[i],
       environmentalInfluence[i],
@@ -1066,150 +1066,150 @@ call.addEventListener(
 // mobilityOptions[3] = Bus
 // mobilityOptions[4] = Call
 
-// train.addEventListener(
-//   "load",
-//   function () {
-//     getContentDocument = train.contentDocument;
-//     console.log(getContentDocument);
-//     let trainSVG = getContentDocument.getElementById("e11y4r30i7lro1");
-//     trainSVG.addEventListener("click", function () {
-//       train.style.display = "none";
+train.addEventListener(
+  "load",
+  function () {
+    getContentDocument = train.contentDocument;
+    console.log(getContentDocument);
+    let trainSVG = getContentDocument.getElementById("e11y4r30i7lro1");
+    trainSVG.addEventListener("click", function () {
+      train.style.display = "none";
 
-//       mobilityOptions[1].selected = true;
+      mobilityOptions[1].selected = true;
 
-//       calculateMobilityOptions(1);
-//       clickTimer = true;
+      calculateMobilityOptions(1);
+      clickTimer = true;
 
-//       trainclick.style.display = "block";
-//       trainclick.contentDocument.location.reload(true);
-//     });
-//   },
-//   false
-// );
+      trainclick.style.display = "block";
+      trainclick.contentDocument.location.reload(true);
+    });
+  },
+  false
+);
 
-getContentDocument = train.contentDocument;
-console.log(getContentDocument);
-let trainSVG = getContentDocument.getElementById("e11y4r30i7lro1");
-trainSVG.addEventListener("click", function () {
-  train.style.display = "none";
+// getContentDocument = train.contentDocument;
+// console.log(getContentDocument);
+// let trainSVG = getContentDocument.getElementById("e11y4r30i7lro1");
+// trainSVG.addEventListener("click", function () {
+//   train.style.display = "none";
 
-  mobilityOptions[1].selected = true;
+//   mobilityOptions[1].selected = true;
 
-  calculateMobilityOptions(1);
-  clickTimer = true;
+//   calculateMobilityOptions(1);
+//   clickTimer = true;
 
-  trainclick.style.display = "block";
-  trainclick.contentDocument.location.reload(true);
-  train.contentDocument.location.reload(true);
-});
+//   trainclick.style.display = "block";
+//   trainclick.contentDocument.location.reload(true);
+//   // train.contentDocument.location.reload(true);
+// });
 
-// plane.addEventListener(
-//   "load",
-//   function () {
-//     getContentDocument = plane.contentDocument;
-//     console.log(getContentDocument);
-//     let planeSVG = getContentDocument.getElementById("en4qhsbx4v0b1");
-//     planeSVG.addEventListener("click", function () {
-//       plane.style.display = "none";
+plane.addEventListener(
+  "load",
+  function () {
+    getContentDocument = plane.contentDocument;
+    console.log(getContentDocument);
+    let planeSVG = getContentDocument.getElementById("en4qhsbx4v0b1");
+    planeSVG.addEventListener("click", function () {
+      plane.style.display = "none";
 
-//       mobilityOptions[2].selected = true;
+      mobilityOptions[2].selected = true;
 
-//       calculateMobilityOptions(2);
-//       clickTimer = true;
+      calculateMobilityOptions(2);
+      clickTimer = true;
 
-//       planeclick.style.display = "block";
-//       planeclick.contentDocument.location.reload(true);
-//     });
-//   },
-//   false
-// );
-getContentDocument = plane.contentDocument;
+      planeclick.style.display = "block";
+      planeclick.contentDocument.location.reload(true);
+    });
+  },
+  false
+);
+// getContentDocument = plane.contentDocument;
 
-let planeSVG = getContentDocument.getElementById("en4qhsbx4v0b1");
-planeSVG.addEventListener("click", function () {
-  plane.style.display = "none";
+// let planeSVG = getContentDocument.getElementById("en4qhsbx4v0b1");
+// planeSVG.addEventListener("click", function () {
+//   plane.style.display = "none";
 
-  mobilityOptions[2].selected = true;
+//   mobilityOptions[2].selected = true;
 
-  calculateMobilityOptions(2);
-  clickTimer = true;
+//   calculateMobilityOptions(2);
+//   clickTimer = true;
 
-  planeclick.style.display = "block";
-  planeclick.contentDocument.location.reload(true);
-  plane.contentDocument.location.reload(true);
-});
-// car.addEventListener(
-//   "load",
-//   function () {
-//     getContentDocument = car.contentDocument;
+//   planeclick.style.display = "block";
+//   // plane.contentDocument.location.reload(true);
+//   planeclick.contentDocument.location.reload(true);
+// });
+car.addEventListener(
+  "load",
+  function () {
+    getContentDocument = car.contentDocument;
 
-//     console.log(getContentDocument);
-//     let carSVG = getContentDocument.getElementById("erqlesk3yzf1");
-//     carSVG.addEventListener("click", function () {
-//       car.style.display = "none";
+    console.log(getContentDocument);
+    let carSVG = getContentDocument.getElementById("erqlesk3yzf1");
+    carSVG.addEventListener("click", function () {
+      car.style.display = "none";
 
-//       mobilityOptions[0].selected = true;
+      mobilityOptions[0].selected = true;
 
-//       calculateMobilityOptions(0);
-//       clickTimer = true;
+      calculateMobilityOptions(0);
+      clickTimer = true;
 
-//       carclick.style.display = "block";
-//       carclick.contentDocument.location.reload(true);
-//     });
-//   },
-//   false
-// );
-getContentDocument = car.contentDocument;
-let carSVG = getContentDocument.getElementById("erqlesk3yzf1");
-carSVG.addEventListener("click", function () {
-  car.style.display = "none";
+      carclick.style.display = "block";
+      carclick.contentDocument.location.reload(true);
+    });
+  },
+  false
+);
+// getContentDocument = car.contentDocument;
+// let carSVG = getContentDocument.getElementById("erqlesk3yzf1");
+// carSVG.addEventListener("click", function () {
+//   car.style.display = "none";
 
-  mobilityOptions[0].selected = true;
+//   mobilityOptions[0].selected = true;
 
-  calculateMobilityOptions(0);
-  clickTimer = true;
+//   calculateMobilityOptions(0);
+//   clickTimer = true;
 
-  carclick.style.display = "block";
-  carclick.contentDocument.location.reload(true);
-  car.contentDocument.location.reload(true);
-});
+//   carclick.style.display = "block";
+//   carclick.contentDocument.location.reload(true);
+//   // car.contentDocument.location.reload(true);
+// });
 
-// bus.addEventListener(
-//   "load",
-//   function () {
-//     getContentDocument = bus.contentDocument;
-//     console.log(getContentDocument);
-//     let busSVG = getContentDocument.getElementById("eyil7nf7hqe1");
-//     busSVG.addEventListener("click", function () {
-//       bus.style.display = "none";
+bus.addEventListener(
+  "load",
+  function () {
+    getContentDocument = bus.contentDocument;
+    console.log(getContentDocument);
+    let busSVG = getContentDocument.getElementById("eyil7nf7hqe1");
+    busSVG.addEventListener("click", function () {
+      bus.style.display = "none";
 
-//       mobilityOptions[3].selected = true;
+      mobilityOptions[3].selected = true;
 
-//       calculateMobilityOptions(3);
-//       clickTimer = true;
+      calculateMobilityOptions(3);
+      clickTimer = true;
 
-//       busclick.style.display = "block";
-//       busclick.contentDocument.location.reload(true);
-//     });
-//   },
-//   false
-// );
+      busclick.style.display = "block";
+      busclick.contentDocument.location.reload(true);
+    });
+  },
+  false
+);
 
-getContentDocument = bus.contentDocument;
+// getContentDocument = bus.contentDocument;
 
-let busSVG = getContentDocument.getElementById("eyil7nf7hqe1");
-busSVG.addEventListener("click", function () {
-  bus.style.display = "none";
+// let busSVG = getContentDocument.getElementById("eyil7nf7hqe1");
+// busSVG.addEventListener("click", function () {
+//   bus.style.display = "none";
 
-  mobilityOptions[3].selected = true;
+//   mobilityOptions[3].selected = true;
 
-  calculateMobilityOptions(3);
-  clickTimer = true;
+//   calculateMobilityOptions(3);
+//   clickTimer = true;
 
-  busclick.style.display = "block";
-  busclick.contentDocument.location.reload(true);
-  bus.contentDocument.location.reload(true);
-});
+//   busclick.style.display = "block";
+//   busclick.contentDocument.location.reload(true);
+//   // bus.contentDocument.location.reload(true);
+// });
 
 function showSVG(j) {
   car.style.display = "block";
