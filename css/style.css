@@ -4,18 +4,6 @@ body {
   margin: 0;
 }
 
-.svg {
-  opacity: 1;
-  /* position: absolute; */
-  display: none;
-}
-
-.thirdoption {
-  opacity: 1;
-  position: absolute;
-  /* display: none; */
-}
-
 #bus {
   transform: translate(60.5vw, 27vh);
   position: absolute;
@@ -38,12 +26,29 @@ body {
   position: absolute;
   display: none;
 }
+#planeclick {
+  transform: translate(60.5vw, 27vh);
+  position: absolute;
+  display: none;
+}
 #car {
   transform: translate(23.9vw, 27vh);
   position: absolute;
+  display: none;
 }
 
+#carclick {
+  transform: translate(23.9vw, 27vh);
+  position: absolute;
+  display: none;
+}
 #train {
   transform: translate(42.2vw, 27vh);
   position: absolute;
+  display: none;
+}
+#trainclick {
+  transform: translate(42.2vw, 27vh);
+  position: absolute;
+  display: none;
 }
