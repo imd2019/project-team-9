@@ -77,6 +77,7 @@ let toDoBox;
 let toDoBoxDone;
 
 let windmillImage;
+// let logo;
 
 function preload() {
   // load font
@@ -120,6 +121,7 @@ function preload() {
   toDoBoxDone = loadImage("./assets/toDo_done.png");
 
   windmillImage = loadImage("./assets/windmill.png");
+  // logo = loadImage("./assets/logo_1.mp4");
 }
 window.preload = preload;
 
@@ -161,6 +163,7 @@ let buttonReload;
 //startscreen
 let startscreen;
 let buttonStartGame;
+// let logoScreen;
 
 // let gameStarted;
 
@@ -202,7 +205,7 @@ function gameSetup() {
   // initiate time
   timer = new BasicObjectText(
     bar.x + 222 * scaleX,
-    bar.y - 17,
+    bar.y - 10,
     105 * scaleX,
     30 * scaleY,
     10,
@@ -215,7 +218,7 @@ function gameSetup() {
 
   day = new BasicObjectText(
     bar.x + 140 * scaleX,
-    bar.y - 17,
+    bar.y - 10,
     54 * scaleX,
     30 * scaleY,
     10,
@@ -328,18 +331,26 @@ function gameSetup() {
     780 * scaleY,
     evaluationBG
   );
+  // logoScreen = new BasicObjectImage(
+  //   (windowWidth / 2) * scaleX,
+  //   (windowHeight / 2) * scaleY,
+  //   100,
+  //   200,
+  //   logo_1.mp4
+  // );
   buttonStartGame = new BasicObjectText(
-    windowWidth / 2 - 150 * scaleX,
+    windowWidth / 2 - 70 * scaleX,
     windowHeight / 2 - 100 * scaleY,
-    300 * scaleX,
-    50 * scaleY,
+    200 * scaleX,
+    100 * scaleY,
     10,
     "#E83A5A",
+
     "mobi",
-    25 * scaleX,
+    75 * scaleX,
     0
   );
-
+  buttonStartGame.setFont(rokkittFont);
   // intermediate result
   resultI = new BasicObjectImage(
     0,
@@ -870,7 +881,9 @@ let headBobbing = true;
 function draw() {
   if (startOfGame) {
     startscreen.display();
+
     buttonStartGame.display();
+    buttonStartGame.mouseOver();
   }
 
   //User selection display

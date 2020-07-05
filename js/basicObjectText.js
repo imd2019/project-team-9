@@ -33,7 +33,7 @@ export default class BasicObjectText {
     textAlign(CENTER, CENTER);
     textFont(this.textFont);
     fill(this.textColor);
-    text(this.title, this.x + this.width / 2, this.y + this.height / 2);
+    text(this.title, this.x + this.width / 2, this.y + this.height / 2.7);
   }
 
   hitTest(x, y) {
@@ -69,5 +69,15 @@ export default class BasicObjectText {
 
   setText(text) {
     this.title = text;
+  }
+
+  mouseOver() {
+    if (this.hitTest(mouseX, mouseY)) {
+      this.rectColor = "#bae2e3";
+      this.textColor = "#E83A5A";
+    } else {
+      this.rectColor = "#E83A5A";
+      this.textColor = "FFFFFF";
+    }
   }
 }
