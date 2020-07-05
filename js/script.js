@@ -130,7 +130,7 @@ function preload() {
   toDoBoxDone = loadImage("./assets/toDo_done.png");
 
   windmillImage = loadImage("./assets/windmill.png");
-  logo = createVideo("./assets/logo.mp4");
+  logo = createVideo("./assets/logo.mp4", loaded);
 }
 window.preload = preload;
 
@@ -579,6 +579,11 @@ for (let i = 0; i < 5; i++) {
 // initiate assignment array because it needs to be used in newDay()
 let assignmentArray = [];
 
+//load mp4
+function loaded() {
+  logo.play();
+}
+
 // set Time
 function setTime() {
   // initiate first Day
@@ -991,7 +996,7 @@ let headBobbing = true;
 function draw() {
   if (startOfGame) {
     startscreen.display();
-    logo.play();
+    // logo.play();
     buttonStartGame.display();
     buttonStartGame.mouseOver();
 

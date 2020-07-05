@@ -8,6 +8,7 @@ export default class User extends BasicObjectImage {
     this.userSelection = true;
     this.userImage = userImage;
     this.backgroundUserImage = backgroundUserImage;
+    this.logoHover = loadImage("./assets/logoHover.png");
   }
 
   display() {
@@ -24,10 +25,9 @@ export default class User extends BasicObjectImage {
   }
   mouseOver() {
     if (this.hitTest(mouseX, mouseY)) {
+      image(this.logoHover, this.x + 160, 80, 60, 70);
       image(this.backgroundUserImage, this.x, this.y, this.width, this.height);
     } else {
-      this.rectColor = "#E83A5A";
-      this.textColor = "FFFFFF";
     }
   }
 }
