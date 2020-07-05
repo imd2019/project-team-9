@@ -17,7 +17,6 @@ export default class MobilityOption extends BasicObjectText {
 
     this.environmentalInfluence = environmentalInfluence;
 
-    // this.satisfactionInfluence = satisfactionInfluence;
     this.hidden = true;
     this.selected = false;
     this.duration = 0;
@@ -25,10 +24,6 @@ export default class MobilityOption extends BasicObjectText {
   }
 
   display() {
-    // if (this.selected === true) {
-    //   this.hidden = true;
-    // }
-
     if (!this.hidden) {
       push();
 
@@ -44,6 +39,5 @@ export default class MobilityOption extends BasicObjectText {
 
   clicked() {
     this.selected = true;
-    //   this.selected = false;
   }
 }

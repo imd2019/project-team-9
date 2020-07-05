@@ -1,7 +1,7 @@
 import BasicObjectImage from "./basicObjectImage.js";
 
 export default class Assignment extends BasicObjectImage {
-  constructor(x, y, width, height, scaleX, scaleY) {
+  constructor(x, y, width, height, scaleX, scaleY, textSize) {
     super(x, y, width, height, image);
     this.scaleX = scaleX;
     this.scaleY = scaleY;
@@ -13,6 +13,7 @@ export default class Assignment extends BasicObjectImage {
     this.companyIndex = 0;
     this.assignmentDone = false;
     this.durationAssignment = 0;
+    this.textSize = textSize;
   }
 
   display() {
@@ -30,10 +31,12 @@ export default class Assignment extends BasicObjectImage {
     );
 
     textFont(this.font);
+    textAlign(LEFT);
+    textSize(this.textSize);
     text(
       this.text,
-      this.x * this.scaleX + 100,
-      this.y * this.scaleY + (this.width / 2) * this.scaleY
+      this.x * this.scaleX + 70 * this.scaleX,
+      this.y * this.scaleY + (this.width / 2) * this.scaleY - 5 * this.scaleY
     );
   }
 
