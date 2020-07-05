@@ -14,7 +14,7 @@ import Windmill from "./windmill.js";
 let scaleX = windowWidth / 1536;
 let scaleY = windowWidth / 1536;
 // let scaleY = windowHeight / 750;
-
+let startOfGame = true;
 let timerAll = 0;
 let hourTimer = 6;
 let minuteTimer = 0;
@@ -166,6 +166,10 @@ let windmillArray = [];
 let windmillX;
 let windmillY;
 let windmillSize;
+
+//startscreen
+let startscreen;
+let buttonStartGame;
 
 // let gameStarted;
 
@@ -324,6 +328,26 @@ function gameSetup() {
     arrayObject.width *= scaleX;
     arrayObject.height *= scaleY;
   }
+
+  //startscreen
+  startscreen = new BasicObjectImage(
+    0,
+    0,
+    1536 * scaleX,
+    780 * scaleY,
+    evaluationBG
+  );
+  buttonStartGame = new BasicObjectText(
+    windowWidth / 2 - 150 * scaleX,
+    windowHeight / 2 - 100 * scaleY,
+    300 * scaleX,
+    50 * scaleY,
+    10,
+    "#E83A5A",
+    "mobi",
+    25 * scaleX,
+    0
+  );
 
   // intermediate result
   resultI = new BasicObjectImage(
@@ -943,18 +967,25 @@ let headBobbing = true;
 
 // ==== DRAW ====
 function draw() {
-  //User selection display
-  fill(186, 226, 227);
-  rect(0, 0, windowWidth, windowHeight);
+  if (startOfGame) {
+    startscreen.display();
+    buttonStartGame.display();
+  }
 
-  for (let i = 0; i < users.length; i++) {
-    if (users[i].userSelection && !hideUserSelection) {
-      users[i].display();
-    } //boolean to make it disappear after selecting one
-    if (!users[i].userSelection) {
-      users[i].userSelection = false;
-      hideUserSelection = true;
-      showGame = true;
+  //User selection display
+  if (!startOfGame) {
+    fill(186, 226, 227);
+    rect(0, 0, windowWidth, windowHeight);
+
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].userSelection && !hideUserSelection) {
+        users[i].display();
+      } //boolean to make it disappear after selecting one
+      if (!users[i].userSelection) {
+        users[i].userSelection = false;
+        hideUserSelection = true;
+        showGame = true;
+      }
     }
   }
 
@@ -1153,7 +1184,7 @@ function mouseClicked() {
   }
 
   //Gender selection
-  if (!showGame) {
+  if (!showGame && !startOfGame) {
     for (let i = 0; i < 3; i++) {
       users[i].mouseClicked();
     }
@@ -1169,6 +1200,10 @@ function mouseClicked() {
     if (buttonReload.mouseClicked()) {
       window.location.reload();
     }
+  }
+
+  if (buttonStartGame.mouseClicked()) {
+    startOfGame = false;
   }
 }
 
