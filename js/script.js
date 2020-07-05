@@ -21,6 +21,7 @@ let timerDay = 1;
 let time = 0;
 let clickAnimationTimer = 0;
 let clickTimer = false;
+let isClickable;
 let showResult = false;
 let assignmentText = "";
 let assignmentsAmount = 5;
@@ -81,7 +82,7 @@ function preload() {
   segeoUiFont = loadFont("./assets/segoeuisl.ttf");
 
   // load images
-  mapImage = loadImage("./assets/Map.png");
+  mapImage = loadImage("./assets/map.png");
   evaluationBG = loadImage("./assets/mobi_evaluation.png");
 
   sheImage = loadImage("./assets/she.png");
@@ -451,7 +452,7 @@ for (let i = 0; i < 5; i++) {
   if (i <= 1) {
     mobilityOptionButton = new MobilityOption(
       windowWidth / 2 - 450 * scaleX + 325 * scaleX * i,
-      windowHeight / 2 - 200 * scaleY,
+      windowHeight / 2 - 180 * scaleY,
       238 * scaleX,
       400 * scaleY,
       cost[i],
@@ -464,7 +465,7 @@ for (let i = 0; i < 5; i++) {
   if (i > 1) {
     mobilityOptionButton = new MobilityOption(
       windowWidth / 2 + 200 * scaleX,
-      windowHeight / 2 - 200 * scaleY,
+      windowHeight / 2 - 180 * scaleY,
       238 * scaleX,
       400 * scaleY,
       cost[i],
@@ -821,7 +822,7 @@ function calculateMobilityOptions(i) {
 
 function checkClickAnimationTimer() {
   clickAnimationTimer++;
-  if (clickAnimationTimer >= 240) {
+  if (clickAnimationTimer >= 220) {
     hideMobilityOptionsDialogue();
     clickTimer = false;
     clickAnimationTimer = 0;
@@ -1040,8 +1041,10 @@ let call = document.getElementById("call");
 let plane = document.getElementById("plane");
 let busclick = document.getElementById("busclick");
 let carclick = document.getElementById("carclick");
+let block1 = document.getElementById("block1");
+let block2 = document.getElementById("block2");
+let block3 = document.getElementById("block3");
 
-// let iframe=
 let getContentDocument;
 call.addEventListener(
   "load",
@@ -1053,7 +1056,12 @@ call.addEventListener(
       call.style.display = "none";
       mobilityOptions[4].selected = true;
       calculateMobilityOptions(4);
+      block3.style.display = "block";
+      block2.style.display = "block";
       clickTimer = true;
+
+      callclick.style.display = "block";
+      callclick.contentDocument.location.reload(true);
       console.log(mobilityOptions[4].selected);
     });
   },
@@ -1065,19 +1073,22 @@ call.addEventListener(
 // mobilityOptions[2] = Flugzeug
 // mobilityOptions[3] = Bus
 // mobilityOptions[4] = Call
-
+let trainSVG;
 train.addEventListener(
   "load",
   function () {
     getContentDocument = train.contentDocument;
     console.log(getContentDocument);
-    let trainSVG = getContentDocument.getElementById("e11y4r30i7lro1");
+    trainSVG = getContentDocument.getElementById("e11y4r30i7lro1");
+
     trainSVG.addEventListener("click", function () {
       train.style.display = "none";
 
       mobilityOptions[1].selected = true;
 
       calculateMobilityOptions(1);
+      block1.style.display = "block";
+      block3.style.display = "block";
       clickTimer = true;
 
       trainclick.style.display = "block";
@@ -1115,6 +1126,8 @@ plane.addEventListener(
       mobilityOptions[2].selected = true;
 
       calculateMobilityOptions(2);
+      block1.style.display = "block";
+      block2.style.display = "block";
       clickTimer = true;
 
       planeclick.style.display = "block";
@@ -1151,6 +1164,8 @@ car.addEventListener(
       mobilityOptions[0].selected = true;
 
       calculateMobilityOptions(0);
+      block3.style.display = "block";
+      block2.style.display = "block";
       clickTimer = true;
 
       carclick.style.display = "block";
@@ -1186,6 +1201,8 @@ bus.addEventListener(
       mobilityOptions[3].selected = true;
 
       calculateMobilityOptions(3);
+      block1.style.display = "block";
+      block2.style.display = "block";
       clickTimer = true;
 
       busclick.style.display = "block";
@@ -1250,6 +1267,9 @@ function hideSVG() {
   carclick.style.display = "none";
   trainclick.style.display = "none";
   busclick.style.display = "none";
-  // call.style.display = "none";
+  callclick.style.display = "none";
   planeclick.style.display = "none";
+  block1.style.display = "none";
+  block2.style.display = "none";
+  block3.style.display = "none";
 }

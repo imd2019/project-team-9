@@ -3,7 +3,27 @@ body {
   padding: 0;
   margin: 0;
 }
-
+#block1 {
+  transform: translate(20.7vw, 27vh);
+  position: absolute;
+  display: none;
+  /* visibility: hidden; */
+  opacity: 0;
+}
+#block2 {
+  transform: translate(41.8vw, 27vh);
+  position: absolute;
+  display: none;
+  /* visibility: hidden; */
+  opacity: 0;
+}
+#block3 {
+  transform: translate(62.9vw, 27vh);
+  position: absolute;
+  display: none;
+  /* visibility: hidden; */
+  opacity: 0;
+}
 #bus {
   transform: translate(62.9vw, 27vh);
   position: absolute;
@@ -20,7 +40,11 @@ body {
   position: absolute;
   display: none;
 }
-
+#callclick {
+  transform: translate(62.9vw, 27vh);
+  position: absolute;
+  display: none;
+}
 #plane {
   transform: translate(62.9vw, 27vh);
   position: absolute;
