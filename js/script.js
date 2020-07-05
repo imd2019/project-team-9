@@ -76,13 +76,15 @@ let close;
 let toDoBox;
 let toDoBoxDone;
 
+let windmillImage;
+
 function preload() {
   // load font
   rokkittFont = loadFont("./assets/Rokkitt-Bold.ttf");
   segeoUiFont = loadFont("./assets/segoeuisl.ttf");
 
   // load images
-  mapImage = loadImage("./assets/map.png");
+  mapImage = loadImage("./assets/Map 2.png");
   evaluationBG = loadImage("./assets/mobi_evaluation.png");
 
   sheImage = loadImage("./assets/she.png");
@@ -116,6 +118,8 @@ function preload() {
   close = loadImage("./assets/close.png");
   toDoBox = loadImage("./assets/toDo.png");
   toDoBoxDone = loadImage("./assets/toDo_done.png");
+
+  windmillImage = loadImage("./assets/windmill.png");
 }
 window.preload = preload;
 
@@ -135,6 +139,7 @@ let statusBarArray = [];
 let bar;
 let timer;
 let day;
+let stopTime = false;
 
 // to Do List
 let toDoList;
@@ -494,15 +499,14 @@ function setTime() {
     firstDay = false;
   }
 
-  if (!showResult) {
-    timerAll++;
+  if (!showResult && !stopTime) {
+    timerAll += 2;
   }
-
-  if (timerAll === 29) {
+  if (timerAll === 30) {
     minuteTimer++;
     timerAll = 0;
   }
-  // 59
+
   if (minuteTimer === 59) {
     minuteTimer = 0;
     hourTimer++;
@@ -724,14 +728,10 @@ function showMobilityOptionsDialogue(i) {
 
   mobilityOptions[0].hidden = false; // car
   mobilityOptions[1].hidden = false; // train
-  if (
-    collisions[i][1] === 0 ||
-    collisions[i][1] === 2 ||
-    collisions[i][1] === 3
-  ) {
+  if (collisions[i][1] === 0 || collisions[i][1] === 2) {
     mobilityOptions[2].hidden = false; // airplane
   }
-  if (collisions[i][1] === 1) {
+  if (collisions[i][1] === 1 || collisions[i][1] === 3) {
     mobilityOptions[4].hidden = false; // call
   }
   if (collisions[i][1] === 5) {
@@ -752,9 +752,9 @@ function hideMobilityOptionsDialogue() {
 }
 
 function calculateDuration(companyIndex, faceIndex, mobilityOptionObject) {
-  //Werte sind nur für Hinfahrt
   mobilityOptionObject.duration =
     hitBoxArray[companyIndex].trackLength / mobilityOptionObject.velocity;
+  mobilityOptionObject.duration = mobilityOptionObject.duration * 2; // going home
   facesArray[faceIndex].isAvailable = false;
 }
 
@@ -816,6 +816,8 @@ function calculateMobilityOptions(i) {
         assignmentArray[j].getDurationOfAssignment(),
         mobilityOptions[i].duration
       );
+
+      stopTime = false;
     }
   }
 }
@@ -834,6 +836,11 @@ let environmentValue = 0;
 let maximalCosts = 0;
 
 let hideUserSelection = false;
+
+// head bobbing
+let headDown = true;
+let timerHeadBobbing = 300;
+let headBobbing = true;
 
 // ==== DRAW ====
 function draw() {
@@ -887,6 +894,27 @@ function draw() {
       arrayObject.display();
     }
 
+    // faces
+    for (let i = 0; i < facesArray.length; i++) {
+      facesArrayBG[i].display();
+      facesArray[i].display();
+      facesArray[i].mouseClicked();
+    }
+    for (let i = 0; i < facesArray.length; i++) {
+      if (facesArray[i].clickTest) {
+        facesArray[i].clicked();
+        break;
+      }
+    }
+
+    // update Cool Down for all workers who are unavailable
+    for (let worker of facesArray) {
+      if (!worker.isAvailable) {
+        worker.coolDownUpdate(stopTime);
+      }
+    }
+
+    // display Mobility Options
     for (let i = 0; i < 5; i++) {
       mobilityOptions[i].display();
     }
@@ -906,6 +934,7 @@ function draw() {
               !facesArray[collisions[i][0]].hideOptionForWorker
             ) {
               showMobilityOptionsDialogue(i);
+              stopTime = true;
               showMobilityOptions = false;
               facesArray[collisions[i][0]].hideOptionForWorker = true;
             }
@@ -915,31 +944,38 @@ function draw() {
       }
     }
 
-    // update Cool Down for all workers who are unavailable
-    for (let worker of facesArray) {
-      if (!worker.isAvailable) {
-        worker.coolDownUpdate();
+    // head bobbing if all faces are available
+    for (let i = 0; i < facesArray.length; i++) {
+      if (!facesArray[i].isAvailable || facesArray[i].hitTest(mouseX, mouseY)) {
+        headBobbing = false;
+        break;
       }
     }
-
-    // faces
-    for (let i = 0; i < facesArray.length; i++) {
-      facesArrayBG[i].display();
-      facesArray[i].display();
-
-      facesArray[i].mouseClicked();
-    }
-
-    for (let i = 0; i < facesArray.length; i++) {
-      if (facesArray[i].clickTest) {
-        facesArray[i].clicked();
-        break;
+    timerHeadBobbing++;
+    if (timerHeadBobbing >= 320) {
+      if (headBobbing) {
+        if (facesArray[0].y >= 15) {
+          headDown = false;
+        }
+        if (facesArray[0].y <= facesArray[0].defaultY) {
+          headDown = true;
+        }
+        if (headDown) {
+          facesArray[0].y += 0.8;
+        }
+        if (!headDown) {
+          facesArray[0].y -= 0.8;
+        }
+      }
+      if (timerHeadBobbing === 345) {
+        timerHeadBobbing = 0;
       }
     }
 
     // show to Do
     if (bar.showToDo) {
       toDoList.display();
+      stopTime = true;
       for (let arrayObject of assignmentArray) {
         arrayObject.display();
       }
@@ -986,6 +1022,7 @@ function mouseClicked() {
   if (toDoList.wasClicked) {
     bar.showToDo = false;
     toDoList.wasClicked = false;
+    stopTime = false;
   }
 
   // hitBoxes
@@ -1006,6 +1043,7 @@ function mouseClicked() {
 
   if (!showMobilityOptions) {
     hideMobilityOptionsDialogue();
+    stopTime = false;
   }
 
   //Gender selection
@@ -1026,8 +1064,6 @@ function mouseClicked() {
       window.location.reload();
     }
   }
-
-  // hideSVG();
 }
 
 window.mouseClicked = mouseClicked;
@@ -1235,15 +1271,10 @@ function showSVG(j) {
     bus.style.display = "block";
   }
 
-  if (collisions[j][1] === 1) {
+  if (collisions[j][1] === 1 || collisions[j][1] === 3) {
     call.style.display = "block";
   }
-
-  if (
-    collisions[j][1] === 0 ||
-    collisions[j][1] === 2 ||
-    collisions[j][1] === 3
-  ) {
+  if (collisions[j][1] === 0 || collisions[j][1] === 2) {
     plane.style.display = "block";
   }
 }
