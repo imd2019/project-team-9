@@ -84,6 +84,7 @@ let toDoBoxDone;
 
 let windmillImage;
 let logo;
+let logoHover;
 
 function preload() {
   // load font
@@ -131,6 +132,7 @@ function preload() {
 
   windmillImage = loadImage("./assets/windmill.png");
   logo = createVideo("./assets/logo.mp4", loaded);
+  logoHover = loadImage("./assets/logoHover.png");
 }
 window.preload = preload;
 
@@ -201,7 +203,8 @@ function gameSetup() {
       300 * scaleX,
       650 * scaleY,
       userImage[i],
-      backgroundUserImage[i]
+      backgroundUserImage[i],
+      logoHover
     );
     users.push(user);
   }
@@ -1023,6 +1026,7 @@ function draw() {
 
         hideUserSelection = true;
         showGame = true;
+        i;
       }
     }
   }
