@@ -8,6 +8,7 @@ import User from "./user.js";
 import StatusBar from "./statusBar.js";
 import ToDo from "./toDo.js";
 import Assignment from "./assignment.js";
+import Windmill from "./windmill.js";
 
 // ==== VARIABLES ====
 let scaleX = windowWidth / 1536;
@@ -32,6 +33,7 @@ let productivityWhole = 0;
 let textProductivity;
 let environmentValueKG = 0;
 let textEnvironment;
+let textCosts;
 
 let indexOfChosenMobilityOption;
 let startCoolDown = false;
@@ -157,8 +159,15 @@ let chosenGenderImage = sheImage;
 let resultI;
 let evaluateProductivity;
 let evaluateEnvironment;
+let evaluateCosts;
 let buttonStartTimeAgain;
 let buttonReload;
+
+// windmill
+let windmillArray = [];
+let windmillX;
+let windmillY;
+let windmillSize;
 
 //startscreen
 let startscreen;
@@ -376,7 +385,7 @@ function gameSetup() {
 
   buttonReload = new BasicObjectText(
     windowWidth / 2 - 150 * scaleX,
-    350 * scaleY,
+    370 * scaleY,
     300 * scaleX,
     50 * scaleY,
     10,
@@ -387,6 +396,44 @@ function gameSetup() {
   );
 
   buttonReload.setFont(segeoUiFont);
+
+  // windmill
+  for (let i = 0; i < 5; i++) {
+    if (i === 0) {
+      windmillX = 163;
+      windmillY = 215;
+      windmillSize = 70;
+    }
+    if (i === 1) {
+      windmillX = 130;
+      windmillY = 225;
+      windmillSize = 80;
+    }
+    if (i === 2) {
+      windmillX = 813;
+      windmillY = 145;
+      windmillSize = 65;
+    }
+    if (i === 3) {
+      windmillX = 867;
+      windmillY = 134;
+      windmillSize = 65;
+    }
+    if (i === 4) {
+      windmillX = 916;
+      windmillY = 130;
+      windmillSize = 65;
+    }
+    windmillArray[i] = new Windmill(
+      windmillX,
+      windmillY,
+      windmillSize,
+      windmillSize,
+      windmillImage,
+      scaleX,
+      scaleY
+    );
+  }
 
   // gameStarted = true;
 }
@@ -547,7 +594,7 @@ function setTime() {
     hourTimer++;
   }
 
-  if (hourTimer === 20) {
+  if (hourTimer === 7) {
     showResult = true;
     minuteTimer = 0;
     hourTimer = 6;
@@ -608,6 +655,7 @@ function setTime() {
         25 * scaleX
       );
       evaluateProductivity.setFont(segeoUiFont);
+      evaluateProductivity.setTextColor("grey");
 
       // load new assignments for next day
       assignmentArray = [];
@@ -621,6 +669,39 @@ function setTime() {
       environmentValueKG = environmentValue / 1000;
       productivityWhole = productivityWhole / 3;
       productivityWhole = productivityWhole / 5;
+
+      // evaluation of costs
+      if (maximalCosts <= 1000) {
+        textCosts =
+          "Du hast " + maximalCosts + "€ ausgegeben. Das ist relativ wenig.";
+      }
+
+      if (maximalCosts > 1000 && maximalCosts <= 2000) {
+        textCosts =
+          "Du hast " +
+          maximalCosts +
+          "€ ausgegeben. Das liegt etwa im Durchschnitt.";
+      }
+
+      if (maximalCosts > 2000 && maximalCosts <= 4000) {
+        textCosts =
+          "Du hast " +
+          maximalCosts +
+          "€ ausgegeben. Das ist ziemlich viel! \nAchte nächstes Mal darauf, günstigere Optionen zu wählen. ";
+      }
+
+      evaluateCosts = new BasicObjectText(
+        windowWidth / 2 - 100,
+        270 * scaleY,
+        200,
+        50,
+        20,
+        "rgba(0,0,0,0)",
+        textCosts,
+        25 * scaleX
+      );
+      evaluateCosts.setFont(segeoUiFont);
+      evaluateCosts.setTextColor("grey");
 
       // evaluation of environmental value
       if (environmentValueKG <= 300) {
@@ -655,26 +736,27 @@ function setTime() {
         25 * scaleX
       );
       evaluateEnvironment.setFont(segeoUiFont);
+      evaluateEnvironment.setTextColor("grey");
 
       // evaluation of whole productivity
       if (productivityWhole <= 20) {
         textProductivity =
-          "Deine Mitarbeiter sind heute nicht produktiv gewesen. \nWas kannst du ändern, um die Produktivität morgen zu steigern?";
+          "Deine Mitarbeiter sind insgesamt nicht produktiv gewesen. \nDas kann die Zukunft deines Unternehmens gefährden!";
       }
 
       if (productivityWhole > 20 && productivityWhole <= 40) {
         textProductivity =
-          "Deine Mitarbeiter sind heute eher nicht produktiv gewesen. \nWas kannst du ändern, um die Produktivität morgen zu steigern?";
+          "Deine Mitarbeiter sind insgesamt eher nicht produktiv gewesen. \nDas kann die Zukunft deines Unternehmens gefährden!";
       }
 
       if (productivityWhole > 40 && productivityWhole <= 60) {
         textProductivity =
-          "Deine Mitarbeiter sind recht produktiv gewesen! \nAber kannst du eventuell noch etwas ändern, um die Produktivität morgen weiter zu steigern?";
+          "Deine Mitarbeiter sind insgesamt recht produktiv gewesen! \nDas hilft dir zwar, die Zukunft deines Unternehmens zu sichern, aber es ist noch Luft nach oben!";
       }
 
       if (productivityWhole > 60 && productivityWhole <= 80) {
         textProductivity =
-          "Sehr gut, deine Mitarbeiter sind sehr produktiv gewesen! \nAber ein bisschen Luft nach oben hat dein Unternehmen noch.";
+          "Sehr gut, deine Mitarbeiter sind insgesamt sehr produktiv gewesen! \nDas hilft dir, die Zukunft deines Unternehmens zu sichern";
       }
 
       if (productivityWhole > 80 && productivityWhole <= 100) {
@@ -693,6 +775,7 @@ function setTime() {
         25 * scaleX
       );
       evaluateProductivity.setFont(segeoUiFont);
+      evaluateProductivity.setTextColor("grey");
     }
   }
 
@@ -708,14 +791,30 @@ function setTime() {
   // write/update assignment
   function updateAssignment(assignmentTexts) {
     for (let i = 0; i < assignmentTexts.length; i++) {
-      assignmentArray[i] = new Assignment(
-        550,
-        200 + i * 70,
-        50,
-        50,
-        scaleX,
-        scaleY
-      );
+      if (i <= 5) {
+        assignmentArray[i] = new Assignment(
+          windowWidth / 2 - 280 * scaleX,
+          windowHeight / 2 - 160 * scaleY + i * 55 * scaleY,
+          40 * scaleX,
+          40 * scaleY,
+          scaleX,
+          scaleY,
+          20 * scaleX
+        );
+      }
+
+      if (i > 5) {
+        assignmentArray[i] = new Assignment(
+          windowWidth / 2 + 40 * scaleX,
+          windowHeight / 2 - 160 * scaleY + (i - 6) * 55 * scaleY,
+          40 * scaleX,
+          40 * scaleY,
+          scaleX,
+          scaleY,
+          20 * scaleX
+        );
+      }
+
       assignmentArray[i].setTextAssignments(split(assignmentTexts[i], ";")[1]);
       assignmentArray[i].setCompanyIndex(split(assignmentTexts[i], ";")[0]);
       assignmentArray[i].setDurationOfAssignment(
@@ -933,6 +1032,12 @@ function draw() {
     day.setText(timerDay);
     imageMode(CORNER);
 
+    // windmill
+    for (let windmillObject of windmillArray) {
+      windmillObject.rotateWindmill();
+      windmillObject.display();
+    }
+
     // hitBoxes
     for (let arrayObject of hitBoxArray) {
       arrayObject.display();
@@ -998,7 +1103,7 @@ function draw() {
     timerHeadBobbing++;
     if (timerHeadBobbing >= 320) {
       if (headBobbing) {
-        if (facesArray[0].y >= 15) {
+        if (facesArray[0].y >= 15 * scaleY) {
           headDown = false;
         }
         if (facesArray[0].y <= facesArray[0].defaultY) {
@@ -1052,6 +1157,7 @@ function draw() {
     if (timerDay === 4) {
       buttonReload.display();
       evaluateEnvironment.display();
+      evaluateCosts.display();
     }
   }
 }
