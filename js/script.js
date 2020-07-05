@@ -53,6 +53,10 @@ let sheGenderImage;
 let theyGenderImage;
 let heGenderImage;
 
+let sheGenderBGImage;
+let theyGenderBGImage;
+let heGenderBGImage;
+
 let workerOneImage;
 let workerTwoImage;
 let workerThreeImage;
@@ -79,7 +83,7 @@ let toDoBox;
 let toDoBoxDone;
 
 let windmillImage;
-// let logo;
+let logo;
 
 function preload() {
   // load font
@@ -93,9 +97,12 @@ function preload() {
   sheImage = loadImage("./assets/she.png");
   heImage = loadImage("./assets/he.png");
   theyImage = loadImage("./assets/they.png");
-  sheGenderImage = loadImage("./assets/she_gender.png");
-  theyGenderImage = loadImage("./assets/they_gender.png");
-  heGenderImage = loadImage("./assets/he_gender.png");
+  sheGenderImage = loadImage("./assets/woman.png");
+  theyGenderImage = loadImage("./assets/diverse.png");
+  heGenderImage = loadImage("./assets/man.png");
+  sheGenderBGImage = loadImage("./assets/woman_bg.png");
+  theyGenderBGImage = loadImage("./assets/diverse_bg.png");
+  heGenderBGImage = loadImage("./assets/man_bg.png");
 
   workerOneImage = loadImage("./assets/worker_one.png");
   workerTwoImage = loadImage("./assets/worker_two.png");
@@ -123,7 +130,7 @@ function preload() {
   toDoBoxDone = loadImage("./assets/toDo_done.png");
 
   windmillImage = loadImage("./assets/windmill.png");
-  // logo = loadImage("./assets/logo_1.mp4");
+  logo = createVideo("./assets/logo.mp4");
 }
 window.preload = preload;
 
@@ -135,6 +142,7 @@ let mapClass;
 // user gender
 let showGame = false;
 let userImage = [];
+let backgroundUserImage = [];
 let users = [];
 let user;
 
@@ -183,14 +191,17 @@ function gameSetup() {
   userImage.push(sheGenderImage);
   userImage.push(theyGenderImage);
   userImage.push(heGenderImage);
-
+  backgroundUserImage.push(sheGenderBGImage);
+  backgroundUserImage.push(theyGenderBGImage);
+  backgroundUserImage.push(heGenderBGImage);
   for (let i = 0; i < 3; i++) {
     user = new User(
       windowWidth / 2 - 525 * scaleX + 400 * i * scaleX,
       windowHeight / 2 - 300 * scaleY,
       300 * scaleX,
       650 * scaleY,
-      userImage[i]
+      userImage[i],
+      backgroundUserImage[i]
     );
     users.push(user);
   }
@@ -348,7 +359,7 @@ function gameSetup() {
   //   logo_1.mp4
   // );
   buttonStartGame = new BasicObjectText(
-    windowWidth / 2 - 70 * scaleX,
+    windowWidth / 2 - 100 * scaleX,
     windowHeight / 2 - 100 * scaleY,
     200 * scaleX,
     100 * scaleY,
@@ -365,7 +376,7 @@ function gameSetup() {
     0,
     0,
     1536 * scaleX,
-    750 * scaleY,
+    780 * scaleY,
     evaluationBG
   );
 
@@ -980,22 +991,31 @@ let headBobbing = true;
 function draw() {
   if (startOfGame) {
     startscreen.display();
-
+    logo.play();
     buttonStartGame.display();
     buttonStartGame.mouseOver();
+
+    logo.size(150 * scaleX, 300 * scaleY);
+    logo.position(
+      windowWidth / 2 - 80 * scaleX,
+      windowHeight / 2 - 370 * scaleY
+    );
   }
 
   //User selection display
   if (!startOfGame) {
+    logo.hide();
     fill(186, 226, 227);
     rect(0, 0, windowWidth, windowHeight);
 
     for (let i = 0; i < users.length; i++) {
       if (users[i].userSelection && !hideUserSelection) {
         users[i].display();
+        users[i].mouseOver();
       } //boolean to make it disappear after selecting one
       if (!users[i].userSelection) {
         users[i].userSelection = false;
+
         hideUserSelection = true;
         showGame = true;
       }

@@ -76,3 +76,7 @@ body {
   position: absolute;
   display: none;
 }
+
+video {
+  position: absolute;
+}
