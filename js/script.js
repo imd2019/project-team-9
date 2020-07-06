@@ -301,9 +301,9 @@ function gameSetup() {
     facesArray[i] = new Draggable(490 + i * 65, 5, 50, 50, imageFace);
   }
 
-  for (let i = 0; i < facesArray.length; i++) {
-    facesArray[i].setPreferences();
-  }
+  // for (let i = 0; i < facesArray.length; i++) {
+  //   facesArray[i].setPreferences();
+  // }
   // make faces scaleable
   for (let arrayObject of facesArray) {
     arrayObject.x *= scaleX;
