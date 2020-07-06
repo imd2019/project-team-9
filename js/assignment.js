@@ -66,5 +66,6 @@ export default class Assignment extends BasicObjectImage {
 
   setAssignmentDone() {
     this.assignmentDone = true;
+    console.log("Hallo");
   }
 }

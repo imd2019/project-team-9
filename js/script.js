@@ -938,8 +938,10 @@ function calculateInfluenceAndCosts(companyIndex, mobilityOptionObject) {
 function checkAssignment(companyIndex) {
   for (let i = 0; i < assignmentArray.length; i++) {
     if (companyIndex === parseInt(assignmentArray[i].getCompanyIndex())) {
-      assignmentArray[i].setAssignmentDone();
-      break; // just one assignment can be completed at the same time
+      if (!assignmentArray[i].assignmentDone) {
+        assignmentArray[i].setAssignmentDone();
+        break; // just one assignment can be completed at the same time
+      }
     }
   }
 }
@@ -1013,7 +1015,7 @@ function draw() {
     // logo.play();
     buttonStartGame.display();
     buttonStartGame.mouseOver();
-    logo.play();
+
     logo.size(150 * scaleX, 300 * scaleY);
     logo.position(
       windowWidth / 2 - 80 * scaleX,
@@ -1355,9 +1357,7 @@ car.addEventListener(
 
     console.log(getContentDocument);
     let carSVG = getContentDocument.getElementById("erqlesk3yzf1");
-    console.log("HEHO");
     carSVG.addEventListener("click", function () {
-      console.log("Hello");
       car.style.display = "none";
 
       mobilityOptions[0].selected = true;
@@ -1498,7 +1498,6 @@ console.log(getContentDocument);
 let carSVG = getContentDocument.getElementById("erqlesk3yzf1");
 console.log("HEHO");
 carSVG.addEventListener("click", function () {
-  console.log("Hello");
   car.style.display = "none";
 
   mobilityOptions[0].selected = true;
