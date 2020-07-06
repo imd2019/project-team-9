@@ -543,6 +543,13 @@ let cost = [0.5, 0.24, 0.3, 0.53, 0];
 let velocity = [120, 150, 1000, 80, 0];
 let environmentalInfluence = [147, 32, 230, 80, 0];
 let titlemobi = ["Auto", "Zug", "Flugzeug", "Bus", "Call"];
+let textMobi = [
+  "relativ teuer\nbraucht relativ lang",
+  "günstiger als das Auto\nschneller als das Auto",
+  "relativ teuer\nsehr schnell",
+  "günstig\nrelativ langsam",
+  "sehr günstig\nkeine Anfahrt",
+];
 
 // mobilityOptions[0] = Auto
 // mobilityOptions[1] = Zug
@@ -559,7 +566,9 @@ for (let i = 0; i < 5; i++) {
       cost[i],
       velocity[i],
       environmentalInfluence[i],
-      titlemobi[i]
+      titlemobi[i],
+      textMobi[i],
+      20 * scaleX
     );
   }
 
@@ -572,7 +581,9 @@ for (let i = 0; i < 5; i++) {
       cost[i],
       velocity[i],
       environmentalInfluence[i],
-      titlemobi[i]
+      titlemobi[i],
+      textMobi[i],
+      20 * scaleX
     );
   }
 
@@ -613,7 +624,7 @@ function setTime() {
     hourTimer++;
   }
 
-  if (hourTimer === 7) {
+  if (hourTimer === 20) {
     showResult = true;
     minuteTimer = 0;
     hourTimer = 6;
@@ -1002,7 +1013,7 @@ function draw() {
     // logo.play();
     buttonStartGame.display();
     buttonStartGame.mouseOver();
-
+    logo.play();
     logo.size(150 * scaleX, 300 * scaleY);
     logo.position(
       windowWidth / 2 - 80 * scaleX,

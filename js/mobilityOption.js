@@ -9,7 +9,9 @@ export default class MobilityOption extends BasicObjectText {
     cost,
     velocity,
     environmentalInfluence,
-    titlemobi
+    titlemobi,
+    text,
+    textSize
   ) {
     super(x, y, width, height);
     this.cost = cost;
@@ -21,6 +23,8 @@ export default class MobilityOption extends BasicObjectText {
     this.selected = false;
     this.duration = 0;
     this.titlemobi = titlemobi;
+    this.text = text;
+    this.textSize = textSize;
   }
 
   display() {
@@ -33,7 +37,11 @@ export default class MobilityOption extends BasicObjectText {
       rect(this.x, this.y, this.width, this.height, 10);
 
       pop();
+      fill("grey");
+      textSize(30);
       text(this.titlemobi, this.x + this.width / 2, this.y + this.height / 2);
+      textSize(this.textSize);
+      text(this.text, this.x + this.width / 2, this.y + this.height / 2 + 100);
     }
   }
 
