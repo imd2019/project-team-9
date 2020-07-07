@@ -351,13 +351,7 @@ function gameSetup() {
     780 * scaleY,
     evaluationBG
   );
-  // logoScreen = new BasicObjectImage(
-  //   (windowWidth / 2) * scaleX,
-  //   (windowHeight / 2) * scaleY,
-  //   100,
-  //   200,
-  //   logo_1.mp4
-  // );
+
   buttonStartGame = new BasicObjectText(
     windowWidth / 2 - 100 * scaleX,
     windowHeight / 2 - 100 * scaleY,
@@ -371,6 +365,7 @@ function gameSetup() {
     0
   );
   buttonStartGame.setFont(rokkittFont);
+
   // intermediate result
   resultI = new BasicObjectImage(
     0,
@@ -598,7 +593,6 @@ function loaded() {
 // set Time
 function setTime() {
   // initiate first Day
-
   if (firstDay) {
     assignmentArray = [];
     loadStrings(
@@ -975,11 +969,17 @@ function calculateMobilityOptions(i) {
       );
 
       // cool Down of workers
-      facesArray[collisions[j][0]].setCoolDown(
-        assignmentArray[j].getDurationOfAssignment(),
-        mobilityOptions[i].duration
-      );
-
+      if (mobilityOptions[i].titlemobi === "Call") {
+        facesArray[collisions[j][0]].setCoolDown(
+          assignmentArray[j].getDurationOfAssignment(),
+          0 // because else the duration is infinity
+        );
+      } else {
+        facesArray[collisions[j][0]].setCoolDown(
+          assignmentArray[j].getDurationOfAssignment(),
+          mobilityOptions[i].duration
+        );
+      }
       stopTime = false;
     }
   }
