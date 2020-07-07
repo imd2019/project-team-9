@@ -23,6 +23,8 @@ export default class BasicObjectText {
     this.textFont = "Arial";
     this.locationSelection = false;
     this.trackLength = trackLength;
+    this.alignText = CENTER;
+    this.alignTextVertical = CENTER;
   }
 
   display() {
@@ -30,7 +32,7 @@ export default class BasicObjectText {
     fill(this.rectColor);
     rect(this.x, this.y, this.width, this.height, this.radius);
     textSize(this.sizeText);
-    textAlign(CENTER, CENTER);
+    textAlign(this.alignText, this.alignTextVertical);
     textFont(this.textFont);
     fill(this.textColor);
     text(this.title, this.x + this.width / 2, this.y + this.height / 2.7);
@@ -57,6 +59,11 @@ export default class BasicObjectText {
       this.clicked();
       return true;
     }
+  }
+
+  setAlignText(alignment, alignmentVertical) {
+    this.alignText = alignment;
+    this.alignTextVertical = alignmentVertical;
   }
 
   setTextColor(color) {

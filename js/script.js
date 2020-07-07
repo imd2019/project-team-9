@@ -627,7 +627,7 @@ function setTime() {
     hourTimer++;
   }
 
-  if (hourTimer === 8) {
+  if (hourTimer === 19) {
     showResult = true;
     minuteTimer = 0;
     hourTimer = 7;
@@ -711,75 +711,77 @@ function setTime() {
         textCosts =
           "Du hast durchschnittlich pro Mitarbeiter " +
           floor(averageCosts) +
-          "€ ausgegeben. Der Durchschnitt in Deutschland pro Mitarbeiter pro Tag liegt bei 157€. \n Du hast also eher wenig ausgegeben!";
+          "€ ausgegeben. \nDer Durchschnitt in Deutschland pro Mitarbeiter pro Tag liegt bei 157€. \nDu hast also eher wenig ausgegeben!";
       }
 
       if (averageCosts > 130 && averageCosts <= 180) {
         textCosts =
           "Du hast durchschnittlich pro Mitarbeiter " +
           floor(averageCosts) +
-          "€ ausgegeben. Der Durchschnitt in Deutschland pro Mitarbeiter pro Tag liegt bei 157€. \n Du liegst ziemlich im Durchschnitt!";
+          "€ ausgegeben. \nDer Durchschnitt in Deutschland pro Mitarbeiter pro Tag liegt bei 157€. \nDu liegst ziemlich im Durchschnitt!";
       }
 
       if (averageCosts > 180) {
         textCosts =
           "Du hast durchschnittlich pro Mitarbeiter " +
           floor(averageCosts) +
-          "€ ausgegeben. Der Durchschnitt in Deutschland pro Mitarbeiter pro Tag liegt bei 157€. \n Du hast also ziemlich viel ausgegeben!";
+          "€ ausgegeben. \nDer Durchschnitt in Deutschland pro Mitarbeiter pro Tag liegt bei 157€. \nDu hast also ziemlich viel ausgegeben!";
       }
 
       evaluateCosts = new BasicObjectText(
-        windowWidth / 2 - 100,
-        270 * scaleY,
+        windowWidth / 2 - 800 * scaleX,
+        100 * scaleY,
         200,
         50,
         20,
         "rgba(0,0,0,0)",
         textCosts,
-        25 * scaleX
+        20 * scaleX
       );
       evaluateCosts.setFont(segeoUiFont);
       evaluateCosts.setTextColor("grey");
+      evaluateCosts.setAlignText(LEFT, TOP);
 
       // evaluation of environmental value
       if (environmentValueKG <= 600) {
         textEnvironment =
           "Du hast " +
           environmentValueKG +
-          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen wenig, du hast versucht darauf zu achten, die Umwelt nicht zu sehr zu belasten, \n versuche das für dein Image weiter zu verbessern. ";
+          "Kg Co2 verbraucht! \nDas ist für die Anzahl an Geschäftsreisen wenig, \ndu hast versucht darauf zu achten, \ndie Umwelt nicht zu sehr zu belasten, \nversuche das für dein Image weiter zu verbessern. ";
       }
 
       if (environmentValueKG > 600 && environmentValueKG <= 1200) {
         textEnvironment =
           "Du hast " +
           environmentValueKG +
-          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen relativ wenig! \n Du hast versucht darauf zu achten, die Umwelt zu schonen, \n aber du solltest versuchen, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen. Das könnte auch dem Image deiner Firma helfen!";
+          "Kg Co2 verbraucht! \nDas ist für die Anzahl an Geschäftsreisen relativ wenig! \nDu hast versucht darauf zu achten, \ndie Umwelt zu schonen, \n aber du solltest versuchen, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen. \nDas könnte auch dem Image deiner Firma helfen!";
       }
 
       if (environmentValueKG > 1200 && environmentValueKG <= 3000) {
         textEnvironment =
           "Du hast " +
           environmentValueKG +
-          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen relativ viel! \n Versuche, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen, \n denn das hilft nicht nur der Umwelt, sondern auch dem Image deiner Firma!";
+          "Kg Co2 verbraucht! \nDas ist für die Anzahl an Geschäftsreisen relativ viel! \nVersuche, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen, \ndenn das hilft nicht nur der Umwelt, sondern auch dem Image deiner Firma!";
       }
 
       evaluateEnvironment = new BasicObjectText(
-        windowWidth / 2 - 100,
-        200 * scaleY,
+        windowWidth / 2,
+        100 * scaleY,
         200,
         50,
         20,
         "rgba(0,0,0,0)",
         textEnvironment,
-        25 * scaleX
+        20 * scaleX
       );
       evaluateEnvironment.setFont(segeoUiFont);
       evaluateEnvironment.setTextColor("grey");
+      evaluateEnvironment.setAlignText(LEFT, TOP);
 
       // evaluation of whole productivity
       if (productivityWhole <= 20) {
         textProductivity =
-          "Deine Mitarbeiter sind insgesamt nicht produktiv gewesen. \nDas kann die Zukunft deines Unternehmens gefährden!";
+          "Deine Mitarbeiter sind insgesamt nicht produktiv gewesen. \nDas wird die Zukunft deines Unternehmens gefährden!";
       }
 
       if (productivityWhole > 20 && productivityWhole <= 40) {
@@ -803,17 +805,18 @@ function setTime() {
       }
 
       evaluateProductivity = new BasicObjectText(
-        windowWidth / 2 - 100,
-        100 * scaleY,
+        windowWidth / 2 - 800 * scaleX,
+        250 * scaleY,
         200,
         50,
         20,
         "rgba(0,0,0,0)",
         textProductivity,
-        25 * scaleX
+        20 * scaleX
       );
       evaluateProductivity.setFont(segeoUiFont);
       evaluateProductivity.setTextColor("grey");
+      evaluateProductivity.setAlignText(LEFT, TOP);
     }
   }
 
@@ -884,7 +887,7 @@ function makeEnvironmentalValueVisible() {
     rect(0, 0, windowWidth, windowHeight);
   }
   if (environmentValue > 1400000) {
-    fill("rgba(0, 0, 0, 0.5)");
+    fill("rgba(0, 0, 0, 0.4)");
     rect(0, 0, windowWidth, windowHeight);
   }
 }
@@ -1061,6 +1064,11 @@ function draw() {
 
   if (showGame) {
     mapClass.display();
+    // windmill
+    for (let windmillObject of windmillArray) {
+      windmillObject.rotateWindmill();
+      windmillObject.display();
+    }
     makeEnvironmentalValueVisible();
 
     // chose gender Image
@@ -1088,12 +1096,6 @@ function draw() {
     timer.setText(setTime());
     day.setText(timerDay);
     imageMode(CORNER);
-
-    // windmill
-    for (let windmillObject of windmillArray) {
-      windmillObject.rotateWindmill();
-      windmillObject.display();
-    }
 
     // hitBoxes
     for (let arrayObject of hitBoxArray) {
@@ -1191,9 +1193,6 @@ function draw() {
     checkClickAnimationTimer();
   }
 
-  console.log(floor(maximalCosts));
-  // console.log(clickAnimationTimer);
-  // console.log(mobilityOptions[3].selected);
   //RESETTING CONDITIONS FOR MOBILITY OPTION DISPLAY IF SOMETHING HAS BEEN SELECTED, ENABLING IT TO BE SHOWN AGAIN IF DRAGGED ON IT AGAIN OR SOMEWHERE ELSE
   if (!collisionDetectionMap.overlapping) {
     for (let i = 0; i < 5; i++) {
@@ -1209,8 +1208,8 @@ function draw() {
     if (timerDay <= 3) {
       resultUtopian.display();
       buttonStartTimeAgain.display();
+      evaluateProductivity.display();
     }
-    evaluateProductivity.display();
 
     if (timerDay === 4) {
       if (environmentValueKG >= 600) {
@@ -1222,6 +1221,7 @@ function draw() {
       buttonReload.display();
       evaluateEnvironment.display();
       evaluateCosts.display();
+      evaluateProductivity.display();
     }
   }
 }
@@ -1316,7 +1316,6 @@ call.addEventListener(
       callclick.style.display = "block";
       callclick.contentDocument.location.reload(true);
       call.contentDocument.location.reload(true);
-      console.log(mobilityOptions[4].selected);
     });
   },
   false
@@ -1377,7 +1376,6 @@ car.addEventListener(
   function () {
     getContentDocument = car.contentDocument;
 
-    console.log(getContentDocument);
     let carSVG = getContentDocument.getElementById("erqlesk3yzf1");
     carSVG.addEventListener("click", function () {
       car.style.display = "none";
@@ -1401,7 +1399,6 @@ bus.addEventListener(
   "load",
   function () {
     getContentDocument = bus.contentDocument;
-    console.log(getContentDocument);
     let busSVG = getContentDocument.getElementById("eyil7nf7hqe1");
     busSVG.addEventListener("click", function () {
       bus.style.display = "none";
@@ -1492,7 +1489,6 @@ callSVG.addEventListener("click", function () {
   callclick.style.display = "block";
   callclick.contentDocument.location.reload(true);
   call.contentDocument.location.reload(true);
-  console.log(mobilityOptions[4].selected);
 });
 
 getContentDocument = train.contentDocument;
@@ -1516,9 +1512,7 @@ trainSVG.addEventListener("click", function () {
 
 getContentDocument = car.contentDocument;
 
-console.log(getContentDocument);
 let carSVG = getContentDocument.getElementById("erqlesk3yzf1");
-console.log("HEHO");
 carSVG.addEventListener("click", function () {
   car.style.display = "none";
 
