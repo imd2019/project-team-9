@@ -16,7 +16,7 @@ let scaleY = windowWidth / 1536;
 // let scaleY = windowHeight / 750;
 let startOfGame = true;
 let timerAll = 0;
-let hourTimer = 6;
+let hourTimer = 7;
 let minuteTimer = 0;
 let timerDay = 1;
 let time = 0;
@@ -45,6 +45,7 @@ let segeoUiFont;
 // load images
 let mapImage;
 let evaluationBG;
+let evaluationDystopianBG;
 
 let sheImage;
 let heImage;
@@ -94,6 +95,7 @@ function preload() {
   // load images
   mapImage = loadImage("./assets/Map 2.png");
   evaluationBG = loadImage("./assets/mobi_evaluation.png");
+  evaluationDystopianBG = loadImage("./assets/mobi_evaluation_dystopian.png");
 
   sheImage = loadImage("./assets/she.png");
   heImage = loadImage("./assets/he.png");
@@ -166,7 +168,8 @@ let imageFaceBG;
 let chosenGenderImage = sheImage;
 
 // result
-let resultI;
+let resultUtopian;
+let resultDystopian;
 let evaluateProductivity;
 let evaluateEnvironment;
 let evaluateCosts;
@@ -367,12 +370,20 @@ function gameSetup() {
   buttonStartGame.setFont(rokkittFont);
 
   // intermediate result
-  resultI = new BasicObjectImage(
+  resultUtopian = new BasicObjectImage(
     0,
     0,
     1536 * scaleX,
     780 * scaleY,
     evaluationBG
+  );
+
+  resultDystopian = new BasicObjectImage(
+    0,
+    0,
+    1536 * scaleX,
+    780 * scaleY,
+    evaluationDystopianBG
   );
 
   buttonStartTimeAgain = new BasicObjectText(
@@ -615,10 +626,10 @@ function setTime() {
     hourTimer++;
   }
 
-  if (hourTimer === 20) {
+  if (hourTimer === 19) {
     showResult = true;
     minuteTimer = 0;
-    hourTimer = 6;
+    hourTimer = 7;
     timerDay++;
     newDay();
   }
@@ -732,18 +743,18 @@ function setTime() {
           "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen sehr wenig, du hast darauf geachtet, die Umwelt nicht zu sehr zu belasten, \n das hilft nicht nur der Umwelt sondern auch deinem Image. ";
       }
 
-      if (environmentValueKG > 300 && environmentValueKG <= 800) {
+      if (environmentValueKG > 300 && environmentValueKG <= 600) {
         textEnvironment =
           "Du hast " +
           environmentValueKG +
           "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen relativ wenig! \n Du hast versucht darauf zu achten, die Umwelt zu schonen, aber vielleicht kannst du versuchen, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen. Das könnte auch dem Image deiner Firma helfen!";
       }
 
-      if (environmentValueKG > 800 && environmentValueKG <= 1500) {
+      if (environmentValueKG > 600 && environmentValueKG <= 1500) {
         textEnvironment =
           "Du hast " +
           environmentValueKG +
-          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen relativ viel! \n Versuche, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen, denn das hilft nicht nur der Uwmelt, sondern auch dem Image deiner Firma!";
+          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen relativ viel! \n Versuche, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen, \n denn das hilft nicht nur der Umwelt, sondern auch dem Image deiner Firma!";
       }
 
       evaluateEnvironment = new BasicObjectText(
@@ -1173,9 +1184,6 @@ function draw() {
     checkClickAnimationTimer();
   }
 
-  // console.log(clickTimer);
-  // console.log(clickAnimationTimer);
-  // console.log(mobilityOptions[3].selected);
   //RESETTING CONDITIONS FOR MOBILITY OPTION DISPLAY IF SOMETHING HAS BEEN SELECTED, ENABLING IT TO BE SHOWN AGAIN IF DRAGGED ON IT AGAIN OR SOMEWHERE ELSE
   if (!collisionDetectionMap.overlapping) {
     for (let i = 0; i < 5; i++) {
@@ -1188,12 +1196,19 @@ function draw() {
 
   // show intermediate result
   if (showResult) {
-    resultI.display();
-    evaluateProductivity.display();
     if (timerDay <= 3) {
+      resultUtopian.display();
       buttonStartTimeAgain.display();
     }
+    evaluateProductivity.display();
+
     if (timerDay === 4) {
+      if (environmentValueKG >= 600) {
+        resultDystopian.display();
+      }
+      if (environmentValueKG < 600) {
+        resultUtopian.display();
+      }
       buttonReload.display();
       evaluateEnvironment.display();
       evaluateCosts.display();
