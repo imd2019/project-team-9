@@ -1,0 +1,1 @@
+Die optimale Auflösung für unsere Simulation ist 1920pxx1080px und ist ausgelegt für die Browser Chrome und Firefox.
