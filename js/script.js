@@ -1209,6 +1209,7 @@ function draw() {
     if (timerDay <= 3) {
       resultUtopian.display();
       buttonStartTimeAgain.display();
+      buttonStartTimeAgain.mouseOver();
     }
     evaluateProductivity.display();
 
@@ -1220,6 +1221,8 @@ function draw() {
         resultUtopian.display();
       }
       buttonReload.display();
+      buttonReload.mouseOver();
+
       evaluateEnvironment.display();
       evaluateCosts.display();
     }
