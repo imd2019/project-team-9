@@ -34,6 +34,7 @@ let textProductivity;
 let environmentValueKG = 0;
 let textEnvironment;
 let textCosts;
+let averageCosts;
 
 let indexOfChosenMobilityOption;
 let startCoolDown = false;
@@ -626,7 +627,7 @@ function setTime() {
     hourTimer++;
   }
 
-  if (hourTimer === 19) {
+  if (hourTimer === 8) {
     showResult = true;
     minuteTimer = 0;
     hourTimer = 7;
@@ -702,26 +703,29 @@ function setTime() {
       productivityWhole = productivityWhole / 3;
       productivityWhole = productivityWhole / 5;
 
+      averageCosts = maximalCosts / 3;
+      averageCosts = averageCosts / 5;
+
       // evaluation of costs
-      if (maximalCosts <= 1000) {
+      if (averageCosts <= 130) {
         textCosts =
-          "Du hast " +
-          floor(maximalCosts) +
-          "€ ausgegeben. Das ist relativ wenig.";
+          "Du hast durchschnittlich pro Mitarbeiter " +
+          floor(averageCosts) +
+          "€ ausgegeben. Der Durchschnitt in Deutschland pro Mitarbeiter pro Tag liegt bei 157€. \n Du hast also eher wenig ausgegeben!";
       }
 
-      if (maximalCosts > 1000 && maximalCosts <= 2000) {
+      if (averageCosts > 130 && averageCosts <= 180) {
         textCosts =
-          "Du hast " +
-          floor(maximalCosts) +
-          "€ ausgegeben. Das liegt etwa im Durchschnitt.";
+          "Du hast durchschnittlich pro Mitarbeiter " +
+          floor(averageCosts) +
+          "€ ausgegeben. Der Durchschnitt in Deutschland pro Mitarbeiter pro Tag liegt bei 157€. \n Du liegst ziemlich im Durchschnitt!";
       }
 
-      if (maximalCosts > 2000 && maximalCosts <= 4000) {
+      if (averageCosts > 180) {
         textCosts =
-          "Du hast " +
-          floor(maximalCosts) +
-          "€ ausgegeben. Das ist ziemlich viel! \nAchte nächstes Mal darauf, günstigere Optionen zu wählen. ";
+          "Du hast durchschnittlich pro Mitarbeiter " +
+          floor(averageCosts) +
+          "€ ausgegeben. Der Durchschnitt in Deutschland pro Mitarbeiter pro Tag liegt bei 157€. \n Du hast also ziemlich viel ausgegeben!";
       }
 
       evaluateCosts = new BasicObjectText(
@@ -738,21 +742,21 @@ function setTime() {
       evaluateCosts.setTextColor("grey");
 
       // evaluation of environmental value
-      if (environmentValueKG <= 300) {
-        textEnvironment =
-          "Du hast nur " +
-          environmentValueKG +
-          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen sehr wenig, du hast darauf geachtet, die Umwelt nicht zu sehr zu belasten, \n das hilft nicht nur der Umwelt sondern auch deinem Image. ";
-      }
-
-      if (environmentValueKG > 300 && environmentValueKG <= 600) {
+      if (environmentValueKG <= 600) {
         textEnvironment =
           "Du hast " +
           environmentValueKG +
-          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen relativ wenig! \n Du hast versucht darauf zu achten, die Umwelt zu schonen, aber vielleicht kannst du versuchen, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen. Das könnte auch dem Image deiner Firma helfen!";
+          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen wenig, du hast versucht darauf zu achten, die Umwelt nicht zu sehr zu belasten, \n versuche das für dein Image weiter zu verbessern. ";
       }
 
-      if (environmentValueKG > 600 && environmentValueKG <= 1500) {
+      if (environmentValueKG > 600 && environmentValueKG <= 1200) {
+        textEnvironment =
+          "Du hast " +
+          environmentValueKG +
+          "Kg Co2 verbraucht! \n Das ist für die Anzahl an Geschäftsreisen relativ wenig! \n Du hast versucht darauf zu achten, die Umwelt zu schonen, \n aber du solltest versuchen, mehr Calls und Zugreisen in den Geschäftsalltag einzubauen. Das könnte auch dem Image deiner Firma helfen!";
+      }
+
+      if (environmentValueKG > 1200 && environmentValueKG <= 3000) {
         textEnvironment =
           "Du hast " +
           environmentValueKG +
@@ -875,11 +879,11 @@ function setTime() {
 }
 
 function makeEnvironmentalValueVisible() {
-  if (environmentValue > 200000) {
+  if (environmentValue > 700000) {
     fill("rgba(0, 0, 0, 0.2)");
     rect(0, 0, windowWidth, windowHeight);
   }
-  if (environmentValue > 1000000) {
+  if (environmentValue > 1400000) {
     fill("rgba(0, 0, 0, 0.5)");
     rect(0, 0, windowWidth, windowHeight);
   }
