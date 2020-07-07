@@ -694,20 +694,22 @@ function setTime() {
       // evaluation of costs
       if (maximalCosts <= 1000) {
         textCosts =
-          "Du hast " + maximalCosts + "€ ausgegeben. Das ist relativ wenig.";
+          "Du hast " +
+          floor(maximalCosts) +
+          "€ ausgegeben. Das ist relativ wenig.";
       }
 
       if (maximalCosts > 1000 && maximalCosts <= 2000) {
         textCosts =
           "Du hast " +
-          maximalCosts +
+          floor(maximalCosts) +
           "€ ausgegeben. Das liegt etwa im Durchschnitt.";
       }
 
       if (maximalCosts > 2000 && maximalCosts <= 4000) {
         textCosts =
           "Du hast " +
-          maximalCosts +
+          floor(maximalCosts) +
           "€ ausgegeben. Das ist ziemlich viel! \nAchte nächstes Mal darauf, günstigere Optionen zu wählen. ";
       }
 
@@ -917,10 +919,11 @@ function calculateInfluenceAndCosts(companyIndex, mobilityOptionObject) {
   if (mobilityOptionObject.selected) {
     environmentValue +=
       hitBoxArray[companyIndex].trackLength *
-      mobilityOptionObject.environmentalInfluence;
+      mobilityOptionObject.environmentalInfluence *
+      2; //going home;
 
     maximalCosts +=
-      hitBoxArray[companyIndex].trackLength * mobilityOptionObject.cost;
+      hitBoxArray[companyIndex].trackLength * mobilityOptionObject.cost * 2; //going home;
 
     mobilityOptionObject.selected = false;
   }
@@ -1173,7 +1176,7 @@ function draw() {
     checkClickAnimationTimer();
   }
 
-  // console.log(clickTimer);
+  console.log(floor(maximalCosts));
   // console.log(clickAnimationTimer);
   // console.log(mobilityOptions[3].selected);
   //RESETTING CONDITIONS FOR MOBILITY OPTION DISPLAY IF SOMETHING HAS BEEN SELECTED, ENABLING IT TO BE SHOWN AGAIN IF DRAGGED ON IT AGAIN OR SOMEWHERE ELSE
