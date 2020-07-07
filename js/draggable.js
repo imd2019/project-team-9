@@ -77,7 +77,8 @@ export default class Draggable extends BasicObjectImage {
   }
 
   coolDownUpdate() {
-    this.hoursUnavailable--;
+    this.hoursUnavailable -= 2;
+    console.log(this.hoursUnavailable);
     if (this.hoursUnavailable <= 0) {
       this.x = this.defaultX;
       this.y = this.defaultY;
