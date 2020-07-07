@@ -8,7 +8,6 @@ export default class CollisionDetection {
     for (let objectOne of arrayOne) {
       for (let objectTwo of arrayTwo) {
         if (this.isOverlapping(objectOne, objectTwo)) {
-          console.log("Die Rechtecke überlappen");
           this.overlapping = true;
           output.push(
             this.getIndexOfArrays(arrayOne, arrayTwo, objectOne, objectTwo)
